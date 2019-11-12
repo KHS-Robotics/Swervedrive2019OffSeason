@@ -13,6 +13,9 @@ import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
+import  com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+
+
 /**
  * The VM is configured to automatically run this class, and to call the
  * functions corresponding to each mode, as described in the TimedRobot
@@ -22,6 +25,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 
 public class Robot extends TimedRobot {
+
+  WPI_TalonSRX motor = new WPI_TalonSRX(15);
+
   public static OI m_oi;
 
   /**
@@ -56,6 +62,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void disabledInit() {
+    motor.set(0);
   }
 
   @Override
@@ -100,6 +107,7 @@ public class Robot extends TimedRobot {
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
     // this line or comment it out.
+    motor.set(.25);
   }
 
   /**
