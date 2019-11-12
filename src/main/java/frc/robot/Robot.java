@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * creating this project, you must also update the build.gradle file in the
  * project.
  */
+
 public class Robot extends TimedRobot {
   public static OI m_oi;
 
@@ -27,6 +28,7 @@ public class Robot extends TimedRobot {
    * This function is run when the robot is first started up and should be
    * used for any initialization code.
    */
+
   @Override
   public void robotInit() {
     m_oi = new OI();
@@ -41,6 +43,7 @@ public class Robot extends TimedRobot {
    * <p>This runs after the mode specific periodic functions, but before
    * LiveWindow and SmartDashboard integrated updating.
    */
+
   @Override
   public void robotPeriodic() {
   }
@@ -50,6 +53,7 @@ public class Robot extends TimedRobot {
    * You can use it to reset any subsystem information you want to clear when
    * the robot is disabled.
    */
+
   @Override
   public void disabledInit() {
   }
@@ -70,6 +74,7 @@ public class Robot extends TimedRobot {
    * chooser code above (like the commented example) or additional comparisons
    * to the switch structure below with additional strings & commands.
    */
+
   @Override
   public void autonomousInit() {
     /*
@@ -83,6 +88,7 @@ public class Robot extends TimedRobot {
   /**
    * This function is called periodically during autonomous.
    */
+
   @Override
   public void autonomousPeriodic() {
     Scheduler.getInstance().run();
@@ -99,6 +105,7 @@ public class Robot extends TimedRobot {
   /**
    * This function is called periodically during operator control.
    */
+
   @Override
   public void teleopPeriodic() {
     Scheduler.getInstance().run();
@@ -107,6 +114,7 @@ public class Robot extends TimedRobot {
   /**
    * This function is called periodically during test mode.
    */
+  
   @Override
   public void testPeriodic() {
   }
