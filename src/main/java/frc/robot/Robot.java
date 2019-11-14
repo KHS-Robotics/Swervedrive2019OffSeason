@@ -79,7 +79,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void disabledInit() {
-    motors[0].set(0);
+    //motors[0].set(0);
   }
 
   @Override
@@ -124,7 +124,7 @@ public class Robot extends TimedRobot {
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
     // this line or comment it out.
-    motors[0].set(.25);
+    //motors[0].set(.25);
   }
 
   /**
