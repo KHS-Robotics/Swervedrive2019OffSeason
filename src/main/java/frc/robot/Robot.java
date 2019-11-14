@@ -36,8 +36,8 @@ public class Robot extends TimedRobot {
     RobotMap.REAR_RIGHT_DRIVE
   };
 
-  WPI_TalonSRX motor = new WPI_TalonSRX(motorPorts[0]);
-
+  WPI_TalonSRX[] motors = new WPI_TalonSRX[motorPorts.length];
+    
   public static OI m_oi;
 
   /**
@@ -48,6 +48,10 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
     m_oi = new OI();
+    
+    for(int i = 0; i < motorPorts.length; i++) {
+      motors[i] = new WPI_TalonSRX(motorPorts[i]);
+    }
   }
 
   /**
@@ -71,7 +75,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void disabledInit() {
-    motor.set(0);
+    motors[0].set(0);
   }
 
   @Override
@@ -116,7 +120,7 @@ public class Robot extends TimedRobot {
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
     // this line or comment it out.
-    motor.set(.25);
+    motors[0].set(.25);
   }
 
   /**
