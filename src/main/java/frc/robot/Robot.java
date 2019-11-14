@@ -25,7 +25,18 @@ import  com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 public class Robot extends TimedRobot {
 
-  WPI_TalonSRX motor = new WPI_TalonSRX(15);
+  int[] motorPorts = {
+    RobotMap.FRONT_LEFT_PIVOT,
+    RobotMap.FRONT_RIGHT_PIVOT,
+    RobotMap.REAR_LEFT_PIVOT,
+    RobotMap.REAR_RIGHT_PIVOT,
+    RobotMap.FRONT_LEFT_DRIVE,
+    RobotMap.FRONT_RIGHT_DRIVE,
+    RobotMap.REAR_LEFT_DRIVE,
+    RobotMap.REAR_RIGHT_DRIVE
+  };
+
+  WPI_TalonSRX motor = new WPI_TalonSRX(motorPorts[0]);
 
   public static OI m_oi;
 
