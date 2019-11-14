@@ -12,6 +12,8 @@ import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.logging.Logger;
+import edu.wpi.first.wpilibj.AnalogInput; 
 
 import  com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
@@ -37,7 +39,8 @@ public class Robot extends TimedRobot {
   };
 
   WPI_TalonSRX[] motors = new WPI_TalonSRX[motorPorts.length];
-    
+  AnalogInput ai = new AnalogInput(0);
+
   public static OI m_oi;
 
   /**
@@ -65,6 +68,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void robotPeriodic() {
+    Logger.debug(ai.getAverageVoltage() + "");
   }
 
   /**
