@@ -48,7 +48,7 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
     m_oi = new OI();
-    
+
     for(int i = 0; i < motorPorts.length; i++) {
       motors[i] = new WPI_TalonSRX(motorPorts[i]);
     }
