@@ -21,12 +21,23 @@ public class SwerveModule extends Subsystem {
   
   private WPI_TalonSRX drive, pivot;
   private AnalogInput ai;
-  
 
   @Override
   protected void initDefaultCommand() {
     this.setDefaultCommand(null);
+    
+  }
+
+  public void initSet(int pivotC, int driveC, int channel) {
+    drive = new WPI_TalonSRX(driveC);
+    pivot = new WPI_TalonSRX(pivotC);
+
+    ai = new AnalogInput(channel);
   }
   
-  
+  private double map(double value, double minRange, double maxRange) {
+    double muliplier = maxRange / minRange;
+    
+    return value * muliplier;
+  }
 }
