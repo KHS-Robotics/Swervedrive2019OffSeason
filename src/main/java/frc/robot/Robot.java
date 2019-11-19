@@ -39,7 +39,7 @@ public class Robot extends TimedRobot {
   };
 
   WPI_TalonSRX[] motors = new WPI_TalonSRX[motorPorts.length];
-  AnalogInput ai = new AnalogInput(0);
+  AnalogInput ai = new AnalogInput(3);
 
   public static OI m_oi;
 
