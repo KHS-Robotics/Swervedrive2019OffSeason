@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.logging.Logger;
+import frc.robot.subsystems.SwerveDrive;
 import edu.wpi.first.wpilibj.AnalogInput; 
 
 import  com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
@@ -26,22 +27,8 @@ import  com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
  */
 
 public class Robot extends TimedRobot {
-
-  int[] motorPorts = {
-    RobotMap.FRONT_LEFT_PIVOT,
-    RobotMap.FRONT_RIGHT_PIVOT,
-    RobotMap.REAR_LEFT_PIVOT,
-    RobotMap.REAR_RIGHT_PIVOT,
-    RobotMap.FRONT_LEFT_DRIVE,
-    RobotMap.FRONT_RIGHT_DRIVE,
-    RobotMap.REAR_LEFT_DRIVE,
-    RobotMap.REAR_RIGHT_DRIVE
-  };
-
-  WPI_TalonSRX[] motors = new WPI_TalonSRX[motorPorts.length];
-  AnalogInput ai = new AnalogInput(3);
-
   public static OI m_oi;
+  public static SwerveDrive swerveDrive;
 
   /**
    * This function is run when the robot is first started up and should be
@@ -50,11 +37,8 @@ public class Robot extends TimedRobot {
 
   @Override
   public void robotInit() {
+    swerveDrive = new SwerveDrive();
     m_oi = new OI();
-
-    for(int i = 0; i < motorPorts.length; i++) {
-      motors[i] = new WPI_TalonSRX(motorPorts[i]);
-    }
   }
 
   /**
@@ -68,7 +52,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void robotPeriodic() {
-    Logger.debug(ai.getAverageVoltage() + "");
+    
   }
 
   /**
@@ -79,7 +63,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void disabledInit() {
-    //motors[0].set(0);
+    
   }
 
   @Override

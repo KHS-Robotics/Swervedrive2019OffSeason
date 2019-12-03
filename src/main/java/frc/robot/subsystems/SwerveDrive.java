@@ -63,6 +63,10 @@ public class SwerveDrive extends Subsystem {
   }
 
   public void set(double x, double y, double z) {
-    
+
+  }
+
+  public void stop() {
+    set(0,0,0);
   }
 }

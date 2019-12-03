@@ -14,6 +14,8 @@ package frc.robot;
  * floating around.
  */
 public class RobotMap {
+  public static final int XBOX_PORT = 0;
+
   // If you are using multiple modules, make sure to define both the port
   // number and the module.
   public static final int FRONT_LEFT_PIVOT = 13;
