@@ -35,8 +35,8 @@ public class SwerveModule extends Subsystem {
     this.setDefaultCommand(null);
   }
 
-  public SwerveModule (int pivotPort, int drivePort, int aiChannel) {
-    pivotPID = new PIDController(0.0, 0.0, 0.0, ai, pivot);
+  public SwerveModule (int pivotPort, int drivePort, int aiChannel, double p, double i, double d) {
+    pivotPID = new PIDController(p, i, d, ai, pivot);
     
     pivotPID.setInputRange(MIN_VOLTAGE, MAX_VOLTAGE);
     pivotPID.setOutputRange(-1, 1);
