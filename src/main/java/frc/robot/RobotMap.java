@@ -25,8 +25,8 @@ public class RobotMap {
   public static final int REAR_LEFT_DRIVE = 12;
   public static final int REAR_RIGHT_DRIVE = 14;
 
-  public static final int FRONT_RIGHT_ANOLOG = 0;
-  public static final int FRONT_LEFT_ANOLOG = 1;
-  public static final int REAR_RIGHT_ANOLOG = 2;
-  public static final int REAR_LEFT_ANOLOG = 3;
+  public static final int FRONT_RIGHT_ANALOG = 0;
+  public static final int FRONT_LEFT_ANALOG = 1;
+  public static final int REAR_RIGHT_ANALOG = 2;
+  public static final int REAR_LEFT_ANALOG = 3;
 }
