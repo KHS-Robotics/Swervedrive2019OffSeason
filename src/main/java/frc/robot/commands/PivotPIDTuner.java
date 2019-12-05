@@ -29,6 +29,8 @@ public class PivotPIDTuner extends Command {
     SmartDashboard.putNumber("D-Value", 0.0);
 
     SmartDashboard.putNumber("Setpoint (Angle)", 0.0);
+
+    SmartDashboard.putNumber("AI", sModule.getAngleVoltage());
   }
 
   // Called repeatedly when this Command is scheduled to run

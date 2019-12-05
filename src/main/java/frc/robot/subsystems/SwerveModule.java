@@ -49,6 +49,10 @@ public class SwerveModule extends Subsystem {
     ai = new AnalogInput(aiChannel);
   }
 
+  public double getAngleVoltage() {
+    return ai.getAverageVoltage();
+  }
+
   public void setPid(double p, double i, double d) {
     pivotPID.setPID(p, i, d);
   }
