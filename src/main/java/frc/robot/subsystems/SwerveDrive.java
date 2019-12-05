@@ -18,7 +18,7 @@ public class SwerveDrive extends Subsystem {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
 
-  private SwerveModule swerveModuleFrontRight, swerveModuleFrontLeft, swerveModuleRearRight, swerveModuleRearLeft;
+  public SwerveModule swerveModuleFrontRight, swerveModuleFrontLeft, swerveModuleRearRight, swerveModuleRearLeft;
 
   @Override
   public void initDefaultCommand() {

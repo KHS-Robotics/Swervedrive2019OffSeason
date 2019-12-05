@@ -17,6 +17,7 @@ public class PivotPIDTuner extends Command {
   SwerveModule sModule;
 
   public PivotPIDTuner(SwerveModule SM) {
+    this.requires(SM);
     sModule = SM;
   }
 

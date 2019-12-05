@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.commands.PivotPIDTuner;
 import frc.robot.logging.Logger;
 import frc.robot.subsystems.SwerveDrive;
 import edu.wpi.first.wpilibj.AnalogInput; 
@@ -104,11 +105,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
-    // This makes sure that the autonomous stops running when
-    // teleop starts running. If you want the autonomous to
-    // continue until interrupted by another command, remove
-    // this line or comment it out.
-    //motors[0].set(.25);
+    Scheduler.getInstance().add(new PivotPIDTuner(swerveDrive.swerveModuleFrontLeft));
   }
 
   /**
