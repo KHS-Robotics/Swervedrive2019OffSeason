@@ -23,7 +23,7 @@ import edu.wpi.first.wpilibj.PIDSourceType;
 public class SwerveModule extends Subsystem {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
-  private static final double MIN_VOLTAGE = 0, MAX_VOLTAGE = 5, DELTA_VOLTAGE = MAX_VOLTAGE - MIN_VOLTAGE;
+  private static final double MIN_VOLTAGE = 0.2, MAX_VOLTAGE = 4.76, DELTA_VOLTAGE = MAX_VOLTAGE - MIN_VOLTAGE;
   private double offset;
 
   private WPI_TalonSRX drive, pivot;
@@ -52,6 +52,10 @@ public class SwerveModule extends Subsystem {
     return ai.getAverageVoltage();
   }
 
+  public double getAngle() {
+    return toAngle(ai.getAverageVoltage());
+  }
+
   public void setPid(double p, double i, double d) {
     pivotPID.setPID(p, i, d);
   }
@@ -75,7 +79,7 @@ public class SwerveModule extends Subsystem {
   public double toVoltage(double angle) {
     angle %= 360;
     angle += 360;
-    return (MIN_VOLTAGE + (DELTA_VOLTAGE * (offset + angle - 360))) / 360.0;
+    return (MIN_VOLTAGE + (DELTA_VOLTAGE * (offset + angle - 360)) / 360.0);
   }
 
   public double toAngle(double voltage) {

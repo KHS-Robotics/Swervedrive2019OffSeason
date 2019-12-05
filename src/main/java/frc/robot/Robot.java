@@ -105,7 +105,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
-    Scheduler.getInstance().add(new PivotPIDTuner(swerveDrive.swerveModuleFrontLeft));
+    Scheduler.getInstance().add(new PivotPIDTuner(swerveDrive.swerveModuleRearRight));
   }
 
   /**
