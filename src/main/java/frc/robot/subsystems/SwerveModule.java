@@ -36,17 +36,16 @@ public class SwerveModule extends Subsystem {
   }
 
   public SwerveModule(int pivotPort, int drivePort, int aiChannel, double p, double i, double d) {
+    ai = new AnalogInput(aiChannel);
+    drive = new WPI_TalonSRX(drivePort);
+    pivot = new WPI_TalonSRX(pivotPort);
+
     pivotPID = new PIDController(p, i, d, ai, pivot);
 
     pivotPID.setInputRange(MIN_VOLTAGE, MAX_VOLTAGE);
     pivotPID.setOutputRange(-1, 1);
     pivotPID.setContinuous();
     pivotPID.setPIDSourceType(PIDSourceType.kDisplacement);
-
-    drive = new WPI_TalonSRX(drivePort);
-    pivot = new WPI_TalonSRX(pivotPort);
-
-    ai = new AnalogInput(aiChannel);
   }
 
   public double getAngleVoltage() {
