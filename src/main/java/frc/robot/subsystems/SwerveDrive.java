@@ -66,16 +66,16 @@ public class SwerveDrive extends Subsystem {
   public void set(double x, double y, double z) {
     //Setup
 
-    omega += z;
-    omega %= 360;
+    //omega += z;
+    //omega %= 360;
 
-    a = x - (omega * l / 2);
-    b = x + (omega * l / 2);
-    c = y - (omega * w / 2);
-    d = y + (omega * w / 2);
+    a = x - (z * l / 2);
+    b = x + (z * l / 2);
+    c = y - (z * w / 2);
+    d = y + (z * w / 2);
 
     //Motor 1 (b,c)
-    swerveModuleFrontRight.setPivot(Math.atan2(b,c) * 180/Math.PI);
+    swerveModuleFrontRight.setPivot(Math.atan2(b,c) * 180/Math.PI + 180);
     speed = Math.sqrt(b*b + c*c);
 
     speed = speed > 1 ? 1 : speed;
@@ -84,7 +84,7 @@ public class SwerveDrive extends Subsystem {
     swerveModuleFrontRight.setDrive(speed);
 
     //Motor 2 (b,d)
-    swerveModuleFrontLeft.setPivot(Math.atan2(b,d) * 180/Math.PI);
+    swerveModuleFrontLeft.setPivot(Math.atan2(b,d) * 180/Math.PI + 180);
     speed = Math.sqrt(b*b + d*d);
 
     speed = speed > 1 ? 1 : speed;
@@ -93,7 +93,7 @@ public class SwerveDrive extends Subsystem {
     swerveModuleFrontLeft.setDrive(speed);
 
     //Motor 1 (a,c)
-    swerveModuleRearRight.setPivot(Math.atan2(a,c) * 180/Math.PI);
+    swerveModuleRearRight.setPivot(Math.atan2(a,c) * 180/Math.PI + 180);
     speed = Math.sqrt(a*a + c*c);
 
     speed = speed > 1 ? 1 : speed;
@@ -102,7 +102,7 @@ public class SwerveDrive extends Subsystem {
     swerveModuleRearRight.setDrive(speed);
 
     //Motor 2 (a,d)
-    swerveModuleRearLeft.setPivot(Math.atan2(a,d) * 180/Math.PI);
+    swerveModuleRearLeft.setPivot(Math.atan2(a,d) * 180/Math.PI + 180);
     speed = Math.sqrt(a*a + d*d);
 
     speed = speed > 1 ? 1 : speed;

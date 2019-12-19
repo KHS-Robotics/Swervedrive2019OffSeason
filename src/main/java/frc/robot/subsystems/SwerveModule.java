@@ -25,7 +25,7 @@ public class SwerveModule extends Subsystem {
   // here. Call these from Commands.
   private static final double MIN_VOLTAGE = 0.2, MAX_VOLTAGE = 4.76, DELTA_VOLTAGE = MAX_VOLTAGE - MIN_VOLTAGE;
   private double offset;
-
+  private boolean flipDrive;
   private WPI_TalonSRX drive, pivot;
   private AnalogInput ai;
   private PIDController pivotPID;
@@ -61,10 +61,18 @@ public class SwerveModule extends Subsystem {
   }
 
   public void setDrive(double output) {
-    drive.set(output);
+    drive.set(flipDrive ? -output : output);
   }
 
   public void setPivot(double angle) {
+
+    double dAngle = Math.abs(angle - this.getAngle());
+    flipDrive = dAngle >= 90 && dAngle <= 270;
+
+    if(flipDrive) {
+      angle += 180;
+    }
+
     pivotPID.setSetpoint(toVoltage(angle));
     pivotPID.enable();
   }
