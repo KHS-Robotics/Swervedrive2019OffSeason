@@ -19,7 +19,7 @@ public class SwerveDrive extends Subsystem {
   // here. Call these from Commands.
 
   public SwerveModule swerveModuleFrontRight, swerveModuleFrontLeft, swerveModuleRearRight, swerveModuleRearLeft;
-
+  private double l = 0, w = 0, a, b, c, d, speed, omega;
   @Override
   public void initDefaultCommand() {
     // Set the default command for a subsystem here.
@@ -63,7 +63,51 @@ public class SwerveDrive extends Subsystem {
   }
 
   public void set(double x, double y, double z) {
+    //Setup
 
+    omega += z;
+    omega %= 360;
+
+    a = x - (omega * l / 2);
+    b = x + (omega * l / 2);
+    c = y - (omega * w / 2);
+    d = y + (omega * w / 2);
+
+    //Motor 1 (b,c)
+    swerveModuleFrontRight.setPivot(Math.atan2(b,c) * 180/Math.PI);
+    speed = Math.sqrt(b*b + c*c);
+
+    speed = speed > 1 ? 1 : speed;
+    speed = speed < -1 ? -1 : speed;
+
+    swerveModuleFrontRight.setDrive(speed);
+
+    //Motor 2 (b,d)
+    swerveModuleFrontLeft.setPivot(Math.atan2(b,d) * 180/Math.PI);
+    speed = Math.sqrt(b*b + d*d);
+
+    speed = speed > 1 ? 1 : speed;
+    speed = speed < -1 ? -1 : speed;
+
+    swerveModuleFrontLeft.setDrive(speed);
+
+    //Motor 1 (a,c)
+    swerveModuleRearRight.setPivot(Math.atan2(a,c) * 180/Math.PI);
+    speed = Math.sqrt(a*a + c*c);
+
+    speed = speed > 1 ? 1 : speed;
+    speed = speed < -1 ? -1 : speed;
+
+    swerveModuleRearRight.setDrive(speed);
+
+    //Motor 2 (a,d)
+    swerveModuleRearLeft.setPivot(Math.atan2(a,d) * 180/Math.PI);
+    speed = Math.sqrt(a*a + d*d);
+
+    speed = speed > 1 ? 1 : speed;
+    speed = speed < -1 ? -1 : speed;
+
+    swerveModuleRearLeft.setDrive(speed);
   }
 
   public void stop() {
