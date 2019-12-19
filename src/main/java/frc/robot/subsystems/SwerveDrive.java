@@ -9,6 +9,7 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
 import frc.robot.RobotMap;
+import frc.robot.commands.DriveSwerveWithXbox;
 import frc.robot.Constants;
 
 /**
@@ -19,11 +20,11 @@ public class SwerveDrive extends Subsystem {
   // here. Call these from Commands.
 
   public SwerveModule swerveModuleFrontRight, swerveModuleFrontLeft, swerveModuleRearRight, swerveModuleRearLeft;
-  private double l = 0, w = 0, a, b, c, d, speed, omega;
+  private double l = 25.75, w = 21, a, b, c, d, speed, omega;
   @Override
   public void initDefaultCommand() {
     // Set the default command for a subsystem here.
-    // setDefaultCommand(new MySpecialCommand());
+    setDefaultCommand(new DriveSwerveWithXbox());
   }
 
   public SwerveDrive() {
