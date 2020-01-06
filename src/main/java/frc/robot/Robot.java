@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 //import frc.robot.commands.PivotPIDTuner;
+import com.kauailabs.navx.frc.AHRS;
 import frc.robot.logging.Logger;
 import frc.robot.subsystems.SwerveDrive;
 import edu.wpi.first.wpilibj.AnalogInput; 
@@ -30,6 +31,7 @@ import  com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 public class Robot extends TimedRobot {
   public static OI m_oi;
   public static SwerveDrive swerveDrive;
+  public static AHRS navx;
 
   /**
    * This function is run when the robot is first started up and should be
@@ -38,7 +40,9 @@ public class Robot extends TimedRobot {
 
   @Override
   public void robotInit() {
+    navx = new AHRS(RobotMap.NAVX_PORT, RobotMap.NAVX_UPDATE_RATE_HZ);
     swerveDrive = new SwerveDrive();
+    swerveDrive.setFOD(false);
     m_oi = new OI();
   }
 

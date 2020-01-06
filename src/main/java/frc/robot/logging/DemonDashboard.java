@@ -9,6 +9,7 @@ package frc.robot.logging;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.OI;
+import frc.robot.Robot;
 
 /**
  * Class to put data to the SmartDashboard on a separate thread
@@ -54,7 +55,7 @@ public class DemonDashboard {
             
             while (running) {
                 try {
-                    
+                    SmartDashboard.putNumber("NavX Angle", Robot.navx.getAngle());
                 } catch (Exception ex) {
                     Logger.error("DemonDashboard crashed!", ex);
                     DemonDashboard.stop();

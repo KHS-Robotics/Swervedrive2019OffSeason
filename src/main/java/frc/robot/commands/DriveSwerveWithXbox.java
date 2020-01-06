@@ -25,20 +25,22 @@ public class DriveSwerveWithXbox extends Command {
   @Override
   protected void initialize() {
     Robot.swerveDrive.stop();
-    /*SmartDashboard.putNumber("x", 0);
+    SmartDashboard.putNumber("x", 0);
     SmartDashboard.putNumber("y", 0);
-    SmartDashboard.putNumber("z", 0); */
+    SmartDashboard.putNumber("z", 0);
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() { //Order 66
-    /* x = SmartDashboard.getNumber("x", 0);
+    /*x = SmartDashboard.getNumber("x", 0);
     y = SmartDashboard.getNumber("y", 0);
-    z = SmartDashboard.getNumber("z", 0); */
+    z = SmartDashboard.getNumber("z", 0);*/
+    
     x = OI.xboxController.getX(Hand.kLeft);
     y = OI.xboxController.getY(Hand.kLeft);
     z = OI.xboxController.getX(Hand.kRight);
+    
     Robot.swerveDrive.set(
       Math.abs(x) > 0.05 ? x : 0,
       Math.abs(y) > 0.05 ? y : 0,

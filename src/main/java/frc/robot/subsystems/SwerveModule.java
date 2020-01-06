@@ -29,13 +29,14 @@ public class SwerveModule extends Subsystem {
   private WPI_TalonSRX drive, pivot;
   private AnalogInput ai;
   private PIDController pivotPID;
+  private boolean isReversed;
 
   @Override
   protected void initDefaultCommand() {
     this.setDefaultCommand(null);
   }
 
-  public SwerveModule(int pivotPort, int drivePort, int aiChannel, double p, double i, double d) {
+  public SwerveModule(int pivotPort, int drivePort, int aiChannel, double p, double i, double d, boolean reversed) {
     ai = new AnalogInput(aiChannel);
     drive = new WPI_TalonSRX(drivePort);
     pivot = new WPI_TalonSRX(pivotPort);
@@ -46,6 +47,12 @@ public class SwerveModule extends Subsystem {
     pivotPID.setOutputRange(-1, 1);
     pivotPID.setContinuous();
     pivotPID.setPIDSourceType(PIDSourceType.kDisplacement);
+
+    isReversed = reversed;
+  }
+
+  public SwerveModule(int pivotPort, int drivePort, int aiChannel, double p, double i, double d) {
+    this(pivotPort, drivePort, aiChannel, p, i, d, false);
   }
 
   public double getAngleVoltage() {
@@ -61,7 +68,10 @@ public class SwerveModule extends Subsystem {
   }
 
   public void setDrive(double output) {
-    drive.set(flipDrive ? -output : output);
+    output = isReversed ? -output : output;
+    output = flipDrive ? -output : output;
+
+    drive.set(output);
   }
 
   public void setPivot(double angle) {
