@@ -87,6 +87,11 @@ public class SwerveModule extends Subsystem {
     pivotPID.enable();
   }
 
+  public void set(double power, double angle) {
+    setDrive(power);
+    setPivot(angle);
+  }
+
   public void stop() {
     if (pivotPID.isEnabled()) {
       pivotPID.disable();

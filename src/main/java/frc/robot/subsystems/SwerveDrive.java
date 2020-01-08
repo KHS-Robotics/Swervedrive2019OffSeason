@@ -22,7 +22,7 @@ public class SwerveDrive extends Subsystem {
   // here. Call these from Commands.
 
   public SwerveModule swerveModuleFrontRight, swerveModuleFrontLeft, swerveModuleRearRight, swerveModuleRearLeft;
-  private final double l = 25.75, w = 21, r = Math.sqrt((l * l) + (w * w)), L_OVER_R = l / r, W_OVER_R = w / r;
+  private final double l = 25.75, w = 21, r = Math.sqrt((l * l) + (w * w)), L_OVER_R = l / r, W_OVER_R = w / r, MIN_X = 0.05, MIN_Y = 0.075, MIN_Z = 0.05;
   private double a, b, c, d, speed;
   private boolean fieldOriented;
 
@@ -53,58 +53,65 @@ public class SwerveDrive extends Subsystem {
     y = -y;
     // Sets front to actual front
 
-    if(fieldOriented) {
-      double angle = Robot.navx.getAngle();
-      double temp = y * Math.cos(angle) + x * Math.sin(angle);
-      x = -y * Math.sin(angle) + x * Math.cos(angle);
-      y = temp;
+    if(Math.abs(x) < MIN_X && Math.abs(y) < MIN_Y && Math.abs(z) < MIN_Z) {
+      swerveModuleFrontLeft.set(0, swerveModuleFrontLeft.getAngle());
+      swerveModuleFrontRight.set(0, swerveModuleFrontRight.getAngle());
+      swerveModuleRearRight.set(0, swerveModuleRearRight.getAngle());
+      swerveModuleRearLeft.set(0, swerveModuleRearLeft.getAngle());
+    } else {
+      if(fieldOriented) {
+        double angle = Robot.navx.getAngle();
+        double temp = y * Math.cos(angle) + x * Math.sin(angle);
+        x = -y * Math.sin(angle) + x * Math.cos(angle);
+        y = temp;
+      }
+
+      a = x - (z * L_OVER_R);
+      b = x + (z * L_OVER_R);
+      c = y - (z * W_OVER_R);
+      d = y + (z * W_OVER_R);
+
+      SmartDashboard.putNumber("A", a);
+      SmartDashboard.putNumber("B", b);
+      SmartDashboard.putNumber("C", c);
+      SmartDashboard.putNumber("D", d);
+
+      //Motor 1 (b,c)
+      swerveModuleFrontRight.setPivot(Math.atan2(b,c) * 180/Math.PI + 180);
+      speed = Math.sqrt(b*b + c*c);
+
+      speed = speed > 1 ? 1 : speed;
+      speed = speed < -1 ? -1 : speed;
+
+      swerveModuleFrontRight.setDrive(speed);
+
+      //Motor 2 (b,d)
+      swerveModuleFrontLeft.setPivot(Math.atan2(b,d) * 180/Math.PI + 180);
+      speed = Math.sqrt(b*b + d*d);
+
+      speed = speed > 1 ? 1 : speed;
+      speed = speed < -1 ? -1 : speed;
+
+      swerveModuleFrontLeft.setDrive(speed);
+
+      //Motor 3 (a,c)
+      swerveModuleRearRight.setPivot(Math.atan2(a,c) * 180/Math.PI + 180);
+      speed = Math.sqrt(a*a + d*d);
+
+      speed = speed > 1 ? 1 : speed;
+      speed = speed < -1 ? -1 : speed;
+
+      swerveModuleRearRight.setDrive(speed);
+
+      //Motor 4 (a,c)
+      swerveModuleRearLeft.setPivot(Math.atan2(a,d) * 180/Math.PI + 180);
+      speed = Math.sqrt(a*a + c*c);
+
+      speed = speed > 1 ? 1 : speed;
+      speed = speed < -1 ? -1 : speed;
+
+      swerveModuleRearLeft.setDrive(speed);
     }
-
-    a = x - (z * L_OVER_R);
-    b = x + (z * L_OVER_R);
-    c = y - (z * W_OVER_R);
-    d = y + (z * W_OVER_R);
-
-    SmartDashboard.putNumber("A", a);
-    SmartDashboard.putNumber("B", b);
-    SmartDashboard.putNumber("C", c);
-    SmartDashboard.putNumber("D", d);
-
-    //Motor 1 (b,c)
-    swerveModuleFrontRight.setPivot(Math.atan2(b,c) * 180/Math.PI + 180);
-    speed = Math.sqrt(b*b + c*c);
-
-    speed = speed > 1 ? 1 : speed;
-    speed = speed < -1 ? -1 : speed;
-
-    swerveModuleFrontRight.setDrive(speed);
-
-    //Motor 2 (b,d)
-    swerveModuleFrontLeft.setPivot(Math.atan2(b,d) * 180/Math.PI + 180);
-    speed = Math.sqrt(b*b + d*d);
-
-    speed = speed > 1 ? 1 : speed;
-    speed = speed < -1 ? -1 : speed;
-
-    swerveModuleFrontLeft.setDrive(speed);
-
-    //Motor 3 (a,c)
-    swerveModuleRearRight.setPivot(Math.atan2(a,c) * 180/Math.PI + 180);
-    speed = Math.sqrt(a*a + d*d);
-
-    speed = speed > 1 ? 1 : speed;
-    speed = speed < -1 ? -1 : speed;
-
-    swerveModuleRearRight.setDrive(speed);
-
-    //Motor 4 (a,c)
-    swerveModuleRearLeft.setPivot(Math.atan2(a,d) * 180/Math.PI + 180);
-    speed = Math.sqrt(a*a + c*c);
-
-    speed = speed > 1 ? 1 : speed;
-    speed = speed < -1 ? -1 : speed;
-
-    swerveModuleRearLeft.setDrive(speed);
   }
 
   public void stop() {
