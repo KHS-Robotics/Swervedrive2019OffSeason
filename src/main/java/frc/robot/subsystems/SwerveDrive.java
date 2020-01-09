@@ -10,6 +10,7 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.RobotMap;
+import frc.robot.commands.DriveSwerveWithJoysticks;
 import frc.robot.commands.DriveSwerveWithXbox;
 import frc.robot.Constants;
 import frc.robot.Robot;
@@ -22,14 +23,16 @@ public class SwerveDrive extends Subsystem {
   // here. Call these from Commands.
 
   public SwerveModule swerveModuleFrontRight, swerveModuleFrontLeft, swerveModuleRearRight, swerveModuleRearLeft;
-  private final double l = 25.75, w = 21, r = Math.sqrt((l * l) + (w * w)), L_OVER_R = l / r, W_OVER_R = w / r, MIN_X = 0.05, MIN_Y = 0.075, MIN_Z = 0.05;
+  private final double l = 25.75, w = 21, r = Math.sqrt((l * l) + (w * w)), L_OVER_R = l / r, W_OVER_R = w / r, MIN_X = 0.05, MIN_Y = 0.1, MIN_Z = 0.05;
   private double a, b, c, d, speed;
   private boolean fieldOriented;
+  private double frAngle, flAngle, rrAngle, rlAngle;
 
   @Override
   public void initDefaultCommand() {
     // Set the default command for a subsystem here.
     setDefaultCommand(new DriveSwerveWithXbox());
+    //setDefaultCommand(new DriveSwerveWithJoysticks());
   }
 
   public SwerveDrive() {
@@ -41,11 +44,16 @@ public class SwerveDrive extends Subsystem {
         RobotMap.REAR_RIGHT_ANALOG, Constants.REAR_RIGHT_P, Constants.REAR_RIGHT_I, Constants.REAR_RIGHT_D);
     swerveModuleRearLeft = new SwerveModule(RobotMap.REAR_LEFT_PIVOT, RobotMap.REAR_LEFT_DRIVE,
         RobotMap.REAR_LEFT_ANALOG, Constants.REAR_LEFT_P, Constants.REAR_LEFT_I, Constants.REAR_LEFT_D, true);
+    
+    frAngle = swerveModuleFrontRight.getAngle();
+    flAngle = swerveModuleFrontLeft.getAngle();
+    rrAngle = swerveModuleRearRight.getAngle();
+    rlAngle = swerveModuleRearLeft.getAngle();
   }
 
   public void setFOD(boolean fod) {
     fieldOriented = fod;
-  } 
+  }
 
   public void set(double x, double y, double z) {
     //Setup
@@ -54,10 +62,14 @@ public class SwerveDrive extends Subsystem {
     // Sets front to actual front
 
     if(Math.abs(x) < MIN_X && Math.abs(y) < MIN_Y && Math.abs(z) < MIN_Z) {
-      swerveModuleFrontLeft.set(0, swerveModuleFrontLeft.getAngle());
-      swerveModuleFrontRight.set(0, swerveModuleFrontRight.getAngle());
-      swerveModuleRearRight.set(0, swerveModuleRearRight.getAngle());
-      swerveModuleRearLeft.set(0, swerveModuleRearLeft.getAngle());
+      swerveModuleFrontLeft.set(0, flAngle);
+      swerveModuleFrontRight.set(0, frAngle);
+      swerveModuleRearRight.set(0, rrAngle);
+      swerveModuleRearLeft.set(0, rlAngle);
+
+      SmartDashboard.putNumber("Xbox-X", x);
+      SmartDashboard.putNumber("Xbox-Y", y);
+      SmartDashboard.putNumber("Xbox-Z", z);
     } else {
       if(fieldOriented) {
         double angle = Robot.navx.getAngle();
@@ -77,7 +89,8 @@ public class SwerveDrive extends Subsystem {
       SmartDashboard.putNumber("D", d);
 
       //Motor 1 (b,c)
-      swerveModuleFrontRight.setPivot(Math.atan2(b,c) * 180/Math.PI + 180);
+      frAngle = Math.atan2(b,c) * 180/Math.PI + 180;
+      swerveModuleFrontRight.setPivot(frAngle);
       speed = Math.sqrt(b*b + c*c);
 
       speed = speed > 1 ? 1 : speed;
@@ -86,7 +99,8 @@ public class SwerveDrive extends Subsystem {
       swerveModuleFrontRight.setDrive(speed);
 
       //Motor 2 (b,d)
-      swerveModuleFrontLeft.setPivot(Math.atan2(b,d) * 180/Math.PI + 180);
+      flAngle = Math.atan2(b,d) * 180/Math.PI + 180;
+      swerveModuleFrontLeft.setPivot(flAngle);
       speed = Math.sqrt(b*b + d*d);
 
       speed = speed > 1 ? 1 : speed;
@@ -95,7 +109,8 @@ public class SwerveDrive extends Subsystem {
       swerveModuleFrontLeft.setDrive(speed);
 
       //Motor 3 (a,c)
-      swerveModuleRearRight.setPivot(Math.atan2(a,c) * 180/Math.PI + 180);
+      rrAngle = Math.atan2(a,c) * 180/Math.PI + 180;
+      swerveModuleRearRight.setPivot(rrAngle);
       speed = Math.sqrt(a*a + d*d);
 
       speed = speed > 1 ? 1 : speed;
@@ -104,7 +119,8 @@ public class SwerveDrive extends Subsystem {
       swerveModuleRearRight.setDrive(speed);
 
       //Motor 4 (a,c)
-      swerveModuleRearLeft.setPivot(Math.atan2(a,d) * 180/Math.PI + 180);
+      rlAngle = Math.atan2(a,d) * 180/Math.PI + 180;
+      swerveModuleRearLeft.setPivot(rlAngle);
       speed = Math.sqrt(a*a + c*c);
 
       speed = speed > 1 ? 1 : speed;
