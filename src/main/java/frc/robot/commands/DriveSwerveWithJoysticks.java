@@ -23,7 +23,7 @@ public class DriveSwerveWithJoysticks extends Command {
         y = OI.joystickXY.getY();
         z = OI.joystickZ.getX();
 
-        Robot.swerveDrive.set(Math.abs(x) > 0.05 ? x : 0, Math.abs(y) > 0.05 ? y : 0, Math.abs(z) > 0.08 ? z : 0);
+        Robot.swerveDrive.set(Math.abs(x) > 0.1 ? x : 0, Math.abs(y) > 0.1 ? y : 0, Math.abs(z) > 0.08 ? z : 0);
     }
 
     // Make this return true when this Command no longer needs to run execute()

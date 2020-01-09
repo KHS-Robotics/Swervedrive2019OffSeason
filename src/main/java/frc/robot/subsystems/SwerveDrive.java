@@ -26,14 +26,14 @@ public class SwerveDrive extends Subsystem {
   private final double l = 25.75, w = 21, r = Math.sqrt((l * l) + (w * w)), L_OVER_R = l / r, W_OVER_R = w / r,
       MIN_X = 0.05, MIN_Y = 0.075, MIN_Z = 0.05;
   private double a, b, c, d;
-  private boolean fieldOriented;
+  private boolean fieldOriented, isHoldingAngle = false;
   private double frAngle, flAngle, rrAngle, rlAngle;
 
   @Override
   public void initDefaultCommand() {
     // Set the default command for a subsystem here.
     setDefaultCommand(new DriveSwerveWithXbox());
-    //setDefaultCommand(new DriveSwerveWithJoysticks());
+    // setDefaultCommand(new DriveSwerveWithJoysticks());
   }
 
   public SwerveDrive() {
@@ -45,7 +45,7 @@ public class SwerveDrive extends Subsystem {
         RobotMap.REAR_RIGHT_ANALOG, Constants.REAR_RIGHT_P, Constants.REAR_RIGHT_I, Constants.REAR_RIGHT_D);
     swerveModuleRearLeft = new SwerveModule(RobotMap.REAR_LEFT_PIVOT, RobotMap.REAR_LEFT_DRIVE,
         RobotMap.REAR_LEFT_ANALOG, Constants.REAR_LEFT_P, Constants.REAR_LEFT_I, Constants.REAR_LEFT_D, true);
-    
+
     frAngle = swerveModuleFrontRight.getAngle();
     flAngle = swerveModuleFrontLeft.getAngle();
     rrAngle = swerveModuleRearRight.getAngle();
@@ -88,7 +88,7 @@ public class SwerveDrive extends Subsystem {
     // Motor 1 (b,c)
     double frPivot = Math.atan2(b, c) * 180 / Math.PI + 180;
     double frSpeed = Math.sqrt(b * b + c * c);
-    
+
     // Motor 2 (b,d)
     double flPivot = Math.atan2(b, d) * 180 / Math.PI + 180;
     double flSpeed = Math.sqrt(b * b + d * d);
@@ -101,49 +101,87 @@ public class SwerveDrive extends Subsystem {
     double rlPivot = Math.atan2(a, d) * 180 / Math.PI + 180;
     double rlSpeed = Math.sqrt(a * a + c * c);
 
-    if ((a == 0 && Math.abs(y) < 0.005) || (Math.abs(x) < 0.005 && Math.abs(y) < 0.005 && Math.abs(z) < 0.005)) {
+    if (((a == 0 && Math.abs(y) < 0.005) || (Math.abs(x) < 0.005 && Math.abs(y) < 0.005 && Math.abs(z) < 0.005))
+        && !isHoldingAngle) {
       frPivot = swerveModuleFrontRight.getAngle();
       flPivot = swerveModuleFrontLeft.getAngle();
       rrPivot = swerveModuleRearRight.getAngle();
       rlPivot = swerveModuleRearLeft.getAngle();
+
+      frSpeed = 0;
+      flSpeed = 0;
+      rrSpeed = 0;
+      rlSpeed = 0;
+
+      isHoldingAngle = true;
     } else if (a == 0) {
       if (y > 0.02) {
         frPivot = flPivot = rrPivot = rlPivot = 180;
+        isHoldingAngle = false;
       } else if (y < -0.15) {
         frPivot = flPivot = rrPivot = rlPivot = 0;
+        isHoldingAngle = false;
       } else {
-        frPivot = swerveModuleFrontRight.getAngle();
-        flPivot = swerveModuleFrontLeft.getAngle();
-        rrPivot = swerveModuleRearRight.getAngle();
-        rlPivot = swerveModuleRearLeft.getAngle();
+        if (!isHoldingAngle) {
+          frPivot = swerveModuleFrontRight.getAngle();
+          flPivot = swerveModuleFrontLeft.getAngle();
+          rrPivot = swerveModuleRearRight.getAngle();
+          rlPivot = swerveModuleRearLeft.getAngle();
+
+          frSpeed = 0;
+          flSpeed = 0;
+          rrSpeed = 0;
+          rlSpeed = 0;
+
+          isHoldingAngle = true;
+        }
       }
+    } else {
+      isHoldingAngle = false;
     }
 
     double max = Math.abs(frSpeed);
-		if(Math.abs(flSpeed) > max)
-			max = Math.abs(flSpeed);
-		if(Math.abs(rlSpeed) > max)
-			max = Math.abs(rlSpeed);
-		if(Math.abs(rrSpeed) > max)
-			max = Math.abs(rrSpeed);
-		
-		if(max > 1) {
-			frSpeed /= max;
-			flSpeed /= max;
-			rlSpeed /= max;
-			rrSpeed /= max;
+    if (Math.abs(flSpeed) > max)
+      max = Math.abs(flSpeed);
+    if (Math.abs(rlSpeed) > max)
+      max = Math.abs(rlSpeed);
+    if (Math.abs(rrSpeed) > max)
+      max = Math.abs(rrSpeed);
+
+    if (max > 1) {
+      frSpeed /= max;
+      flSpeed /= max;
+      rlSpeed /= max;
+      rrSpeed /= max;
     }
-    
+
     swerveModuleFrontRight.setDrive(frSpeed);
     swerveModuleFrontLeft.setDrive(flSpeed);
     swerveModuleRearRight.setDrive(rrSpeed);
     swerveModuleRearLeft.setDrive(rlSpeed);
 
-    swerveModuleFrontRight.setPivot(frPivot);
-    swerveModuleFrontLeft.setPivot(flPivot);
-    swerveModuleRearRight.setPivot(rrPivot);
-    swerveModuleRearLeft.setPivot(rlPivot);
+    if (!isHoldingAngle) {
+      swerveModuleFrontRight.setPivot(frPivot);
+      swerveModuleFrontLeft.setPivot(flPivot);
+      swerveModuleRearRight.setPivot(rrPivot);
+      swerveModuleRearLeft.setPivot(rlPivot);
+    }
 
+    SmartDashboard.putNumber("FR Angle", swerveModuleFrontRight.getAngle());
+    SmartDashboard.putNumber("FR Voltage", swerveModuleFrontRight.getAngleVoltage());
+    SmartDashboard.putNumber("FR Setpoint", frPivot);
+
+    SmartDashboard.putNumber("FL Angle", swerveModuleFrontLeft.getAngle());
+    SmartDashboard.putNumber("FL Voltage", swerveModuleFrontLeft.getAngleVoltage());
+    SmartDashboard.putNumber("FL Setpoint", flPivot);
+
+    SmartDashboard.putNumber("RR Angle", swerveModuleRearRight.getAngle());
+    SmartDashboard.putNumber("RR Voltage", swerveModuleRearRight.getAngleVoltage());
+    SmartDashboard.putNumber("RR Setpoint", rrPivot);
+
+    SmartDashboard.putNumber("RL Angle", swerveModuleRearLeft.getAngle());
+    SmartDashboard.putNumber("RL Voltage", swerveModuleRearLeft.getAngleVoltage());
+    SmartDashboard.putNumber("RL Setpoint", rlPivot);
   }
 
   public void stop() {
