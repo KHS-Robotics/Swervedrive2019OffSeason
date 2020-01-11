@@ -23,9 +23,9 @@ public class SwerveDrive extends Subsystem {
   // here. Call these from Commands.
 
   public SwerveModule swerveModuleFrontRight, swerveModuleFrontLeft, swerveModuleRearRight, swerveModuleRearLeft;
-  private final double l = 25.75, w = 21, r = Math.sqrt((l * l) + (w * w)), L_OVER_R = l / r, W_OVER_R = w / r,
-      MIN_X = 0.05, MIN_Y = 0.075, MIN_Z = 0.05;
-  private double a, b, c, d;
+  private final double l = 25.75, w = 21, r = Math.sqrt((l * l) + (w * w)), L_OVER_R = l / r, W_OVER_R = w / r;
+      //MIN_X = 0.05, MIN_Y = 0.075, MIN_Z = 0.05
+  private double a, b, c, d, C_D_Error = 0.19, A_B_Error = 0.19;
   private boolean fieldOriented, isHoldingAngle = false;
   private double frAngle, flAngle, rrAngle, rlAngle;
 
@@ -50,6 +50,9 @@ public class SwerveDrive extends Subsystem {
     flAngle = swerveModuleFrontLeft.getAngle();
     rrAngle = swerveModuleRearRight.getAngle();
     rlAngle = swerveModuleRearLeft.getAngle();
+
+    SmartDashboard.putNumber("A-B Error", A_B_Error);
+    SmartDashboard.putNumber("C-D Error", C_D_Error);
   }
 
   public void setFOD(boolean fod) {
@@ -63,7 +66,8 @@ public class SwerveDrive extends Subsystem {
     // Sets front to actual front
 
     if (fieldOriented) {
-      double angle = Robot.navx.getAngle();
+      double angle = Robot.navx.getAngle() * Math.PI / 180.0;
+      SmartDashboard.putNumber("Angle (Navx)", angle * 180.0 / Math.PI);
       double temp = y * Math.cos(angle) + x * Math.sin(angle);
       x = -y * Math.sin(angle) + x * Math.cos(angle);
       y = temp;
@@ -73,6 +77,13 @@ public class SwerveDrive extends Subsystem {
     b = x + (z * L_OVER_R);
     c = y - (z * W_OVER_R);
     d = y + (z * W_OVER_R);
+
+    A_B_Error = SmartDashboard.getNumber("A-B Error", A_B_Error);
+    C_D_Error = SmartDashboard.getNumber("C-D Error", C_D_Error);
+
+    if(Math.abs(c) < C_D_Error && Math.abs(a) < A_B_Error) {
+      a = b = c = d = 0;
+    }
 
     SmartDashboard.putNumber("A", a);
     SmartDashboard.putNumber("B", b);

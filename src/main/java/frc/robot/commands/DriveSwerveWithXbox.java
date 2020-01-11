@@ -36,10 +36,12 @@ public class DriveSwerveWithXbox extends Command {
     /*x = SmartDashboard.getNumber("x", 0);
     y = SmartDashboard.getNumber("y", 0);
     z = SmartDashboard.getNumber("z", 0);*/
-    
+
     x = OI.xboxController.getX(Hand.kLeft);
     y = OI.xboxController.getY(Hand.kLeft);
     z = OI.xboxController.getX(Hand.kRight);
+
+    Robot.swerveDrive.setFOD(!OI.xboxController.getBumper(Hand.kLeft));
     
     Robot.swerveDrive.set(
       Math.abs(x) > 0.05 ? x : 0,
