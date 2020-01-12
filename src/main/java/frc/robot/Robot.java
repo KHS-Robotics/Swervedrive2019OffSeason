@@ -50,7 +50,6 @@ public class Robot extends TimedRobot {
 
     navx = new AHRS(RobotMap.NAVX_PORT, RobotMap.NAVX_UPDATE_RATE_HZ);
     swerveDrive = new SwerveDrive();
-    swerveDrive.setFOD(false);
     m_oi = new OI();
   }
 
