@@ -16,6 +16,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import com.kauailabs.navx.frc.AHRS;
 import frc.robot.logging.Logger;
 import frc.robot.subsystems.SwerveDrive;
+import io.github.pseudoresonance.pixy2api.Pixy2;
+import io.github.pseudoresonance.pixy2api.links.SPILink;
 import edu.wpi.first.wpilibj.AnalogInput; 
 
 import  com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
@@ -32,6 +34,9 @@ public class Robot extends TimedRobot {
   public static OI m_oi;
   public static SwerveDrive swerveDrive;
   public static AHRS navx;
+  public static Pixy2 pixy;
+
+  
 
   /**
    * This function is run when the robot is first started up and should be
@@ -40,6 +45,9 @@ public class Robot extends TimedRobot {
 
   @Override
   public void robotInit() {
+    pixy = Pixy2.createInstance(new SPILink());
+    pixy.init(); // Initializes the camera and prepares to send/receive data
+
     navx = new AHRS(RobotMap.NAVX_PORT, RobotMap.NAVX_UPDATE_RATE_HZ);
     swerveDrive = new SwerveDrive();
     swerveDrive.setFOD(false);
@@ -68,7 +76,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void disabledInit() {
-    
+    pixy.setLamp((byte) 0, (byte) 0);
   }
 
   @Override
@@ -110,6 +118,8 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopInit() {
     //Scheduler.getInstance().add(new PivotPIDTuner(swerveDrive.swerveModuleRearRight));
+    pixy.setLamp((byte) 1, (byte) 1); // Turns the LEDs on
+		//pixy.setLED(200, 30, 255); // Sets the RGB LED to purple
   }
 
   /**
