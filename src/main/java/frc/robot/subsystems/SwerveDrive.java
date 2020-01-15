@@ -23,8 +23,7 @@ public class SwerveDrive extends Subsystem {
   // here. Call these from Commands.
 
   public SwerveModule swerveModuleFrontRight, swerveModuleFrontLeft, swerveModuleRearRight, swerveModuleRearLeft;
-  private final double l = 25.75, w = 21, r = Math.sqrt((l * l) + (w * w)), L_OVER_R = l / r, W_OVER_R = w / r;
-      //MIN_X = 0.05, MIN_Y = 0.075, MIN_Z = 0.05
+  private final double l = 25.75, w = 21, r = Math.sqrt((l * l) + (w * w)), L_OVER_R = l / r, W_OVER_R = w / r; //MIN_X = 0.05, MIN_Y = 0.075, MIN_Z = 0.05
   private double a, b, c, d, C_D_Error = 0.19, A_B_Error = 0.19;
   private boolean fieldOriented, isHoldingAngle = false;
 
