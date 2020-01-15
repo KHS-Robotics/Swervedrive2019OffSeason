@@ -45,7 +45,6 @@ public class SwerveDrive extends Subsystem {
     swerveModuleRearLeft = new SwerveModule(RobotMap.REAR_LEFT_PIVOT, RobotMap.REAR_LEFT_DRIVE,
         RobotMap.REAR_LEFT_ANALOG, Constants.REAR_LEFT_P, Constants.REAR_LEFT_I, Constants.REAR_LEFT_D, true);
 
-
     SmartDashboard.putNumber("A-B Error", A_B_Error);
     SmartDashboard.putNumber("C-D Error", C_D_Error);
   }
