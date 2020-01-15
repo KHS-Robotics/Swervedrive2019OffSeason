@@ -27,13 +27,12 @@ public class SwerveDrive extends Subsystem {
       //MIN_X = 0.05, MIN_Y = 0.075, MIN_Z = 0.05
   private double a, b, c, d, C_D_Error = 0.19, A_B_Error = 0.19;
   private boolean fieldOriented, isHoldingAngle = false;
-  private double frAngle, flAngle, rrAngle, rlAngle;
 
   @Override
   public void initDefaultCommand() {
     // Set the default command for a subsystem here.
     setDefaultCommand(new DriveSwerveWithXbox());
-    // setDefaultCommand(new DriveSwerveWithJoysticks());
+    //setDefaultCommand(new DriveSwerveWithJoysticks());
   }
 
   public SwerveDrive() {
@@ -46,10 +45,6 @@ public class SwerveDrive extends Subsystem {
     swerveModuleRearLeft = new SwerveModule(RobotMap.REAR_LEFT_PIVOT, RobotMap.REAR_LEFT_DRIVE,
         RobotMap.REAR_LEFT_ANALOG, Constants.REAR_LEFT_P, Constants.REAR_LEFT_I, Constants.REAR_LEFT_D, true);
 
-    frAngle = swerveModuleFrontRight.getAngle();
-    flAngle = swerveModuleFrontLeft.getAngle();
-    rrAngle = swerveModuleRearRight.getAngle();
-    rlAngle = swerveModuleRearLeft.getAngle();
 
     SmartDashboard.putNumber("A-B Error", A_B_Error);
     SmartDashboard.putNumber("C-D Error", C_D_Error);
