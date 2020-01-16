@@ -41,6 +41,10 @@ public class DriveSwerveWithXbox extends Command {
     y = OI.xboxController.getY(Hand.kLeft);
     z = OI.xboxController.getX(Hand.kRight);
 
+    if(OI.xboxController.getStartButton()) {
+      Robot.swerveDrive.resetNavx();
+    }
+
     Robot.swerveDrive.setFOD(!OI.xboxController.getBumper(Hand.kLeft));
     
     Robot.swerveDrive.set(

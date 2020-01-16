@@ -84,33 +84,36 @@ public class Robot extends TimedRobot {
 
   @Override
   public void disabledPeriodic() {
-    pixy.getCCC().getBlocks(true, 255, 2);
-    ArrayList<Block> blocks = pixy.getCCC().getBlocks();
-    // if(counter > 6) {
-    // for (Block block : blocks) {
-    // System.out.println(block);
-    // }
-    // System.out.println("------------");
-    // counter = 0;
-    // }
-    // counter++;
-    if (blocks.size() > 1) {
-      System.out.println("Saw more than one block");
-      System.out.println(blocks.toString());
-    }
+    try {
+      pixy.getCCC().getBlocks(true, 255, 2);
+      ArrayList<Block> blocks = pixy.getCCC().getBlocks();
+      // if(counter > 6) {
+      // for (Block block : blocks) {
+      // System.out.println(block);
+      // }
+      // System.out.println("------------");
+      // counter = 0;
+      // }
+      // counter++;
+      if (blocks.size() > 1) {
+        System.out.println("Saw more than one block");
+        System.out.println(blocks.toString());
+      }
 
-    SmartDashboard.putBoolean("Yellow", false);
-    SmartDashboard.putBoolean("Red", false);
-    SmartDashboard.putBoolean("Green", false);
-    SmartDashboard.putBoolean("Blue", false);
+      SmartDashboard.putBoolean("Yellow", false);
+      SmartDashboard.putBoolean("Red", false);
+      SmartDashboard.putBoolean("Green", false);
+      SmartDashboard.putBoolean("Blue", false);
 
-    for (Block block : blocks) {
-      ColorWheel color = ColorWheel.toColor(block.getSignature());
-      
-      SmartDashboard.putBoolean("Yellow", color.isYellow() ? true : SmartDashboard.getBoolean("Yellow", false));
-      SmartDashboard.putBoolean("Red", color.isRed() ? true : SmartDashboard.getBoolean("Red", false));
-      SmartDashboard.putBoolean("Green", color.isGreen() ? true : SmartDashboard.getBoolean("Green", false));
-      SmartDashboard.putBoolean("Blue", color.isBlue() ? true : SmartDashboard.getBoolean("Blue", false));
+      for (Block block : blocks) {
+        ColorWheel color = ColorWheel.toColor(block.getSignature());
+
+        SmartDashboard.putBoolean("Yellow", color.isYellow() ? true : SmartDashboard.getBoolean("Yellow", false));
+        SmartDashboard.putBoolean("Red", color.isRed() ? true : SmartDashboard.getBoolean("Red", false));
+        SmartDashboard.putBoolean("Green", color.isGreen() ? true : SmartDashboard.getBoolean("Green", false));
+        SmartDashboard.putBoolean("Blue", color.isBlue() ? true : SmartDashboard.getBoolean("Blue", false));
+      }
+    } catch (Throwable err) {
     }
   }
 
