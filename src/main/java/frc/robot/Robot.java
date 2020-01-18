@@ -14,6 +14,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 //import frc.robot.commands.PivotPIDTuner;
 import com.kauailabs.navx.frc.AHRS;
+
+import frc.robot.Limelight.LightMode;
 import frc.robot.logging.Logger;
 import frc.robot.subsystems.SwerveDrive;
 import io.github.pseudoresonance.pixy2api.Pixy2;
@@ -77,6 +79,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void disabledInit() {
+    Limelight.setLedMode(LightMode.eOff);
     // pixy.setLamp((byte) 0, (byte) 0);
   }
 
@@ -84,6 +87,14 @@ public class Robot extends TimedRobot {
 
   @Override
   public void disabledPeriodic() {
+    if(OI.xboxController.getYButtonPressed()) {
+      if(Limelight.isLedOn()) {
+        Limelight.setLedMode(LightMode.eOff);
+      } else {
+        Limelight.setLedMode(LightMode.eOn);
+      }
+    }
+
     try {
       pixy.getCCC().getBlocks(true, 255, 2);
       ArrayList<Block> blocks = pixy.getCCC().getBlocks();
@@ -151,6 +162,8 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
+    Limelight.setLedMode(LightMode.eOn);
+
     // Scheduler.getInstance().add(new
     // PivotPIDTuner(swerveDrive.swerveModuleRearRight));
     // pixy.setLamp((byte) 1, (byte) 1); // Turns the LEDs on

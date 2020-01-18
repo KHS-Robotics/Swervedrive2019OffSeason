@@ -100,6 +100,10 @@ public class Limelight {
 		getValue("ledMode").setNumber(mode.ordinal());
 	}
 
+	public static boolean isLedOn() {
+		return (int) getValue("ledMode").getDouble(0) == (LightMode.eOn.ordinal());
+	}
+
 	/**
 	 * Sets camera mode for Limelight.
 	 * 
