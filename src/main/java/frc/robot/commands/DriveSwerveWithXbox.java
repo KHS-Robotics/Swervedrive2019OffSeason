@@ -15,7 +15,8 @@ import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class DriveSwerveWithXbox extends Command {
-  public double x, y, z; 
+  public double x, y, z;
+  boolean settingAngle = false;
 
   public DriveSwerveWithXbox() {
     this.requires(Robot.swerveDrive);
@@ -32,26 +33,33 @@ public class DriveSwerveWithXbox extends Command {
 
   // Called repeatedly when this Command is scheduled to run
   @Override
-  protected void execute() { //Order 66
-    /*x = SmartDashboard.getNumber("x", 0);
-    y = SmartDashboard.getNumber("y", 0);
-    z = SmartDashboard.getNumber("z", 0);*/
+  protected void execute() { // Order 66
+    /*
+     * x = SmartDashboard.getNumber("x", 0); y = SmartDashboard.getNumber("y", 0); z
+     * = SmartDashboard.getNumber("z", 0);
+     */
 
     x = OI.xboxController.getX(Hand.kLeft);
     y = OI.xboxController.getY(Hand.kLeft);
     z = OI.xboxController.getX(Hand.kRight);
 
-    if(OI.xboxController.getStartButton()) {
+    if (OI.xboxController.getStartButton()) {
       Robot.swerveDrive.resetNavx();
     }
 
-    Robot.swerveDrive.setFOD(!OI.xboxController.getBumper(Hand.kLeft));
-    
-    Robot.swerveDrive.set(
-      Math.abs(x) > 0.05 ? x : 0,
-      Math.abs(y) > 0.05 ? y : 0,
-      Math.abs(z) > 0.08 ? z : 0
-    );
+    if(Math.abs(x) + Math.abs(y) + Math.abs(z) > 0.35) {
+      Robot.swerveDrive.disablePID();
+      settingAngle = false;
+    }
+
+    if (OI.xboxController.getYButtonPressed()) {
+      Robot.swerveDrive.rotateToAngleInPlace(0.0);
+      settingAngle = true;
+    } else {
+      Robot.swerveDrive.set(Math.abs(x) > 0.05 ? x : 0, Math.abs(y) > 0.05 ? y : 0, Math.abs(z) > 0.08 ? z : 0);
+    }
+
+    Robot.swerveDrive.setFOD(!OI.xboxController.getBumper(Hand.kLeft) || settingAngle);
   }
 
   // Make this return true when this Command no longer needs to run execute()

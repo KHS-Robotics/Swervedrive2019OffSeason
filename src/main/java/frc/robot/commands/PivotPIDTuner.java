@@ -43,8 +43,8 @@ public class PivotPIDTuner extends Command {
     sModule.setPid(p, i, d);
     sModule.setPivot(setPoint);
 
-    SmartDashboard.putNumber("AI", sModule.getAngleVoltage());
-    SmartDashboard.putNumber("Angle", sModule.getAngle());
+    //SmartDashboard.putNumber("AI", sModule.getAngleVoltage());
+    //SmartDashboard.putNumber("Angle", sModule.getAngle());
   }
 
   // Make this return true when this Command no longer needs to run execute()

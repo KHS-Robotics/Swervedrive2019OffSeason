@@ -7,6 +7,9 @@
 
 package frc.robot.subsystems;
 
+import edu.wpi.first.wpilibj.PIDController;
+import edu.wpi.first.wpilibj.PIDOutput;
+import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.RobotMap;
@@ -18,16 +21,17 @@ import frc.robot.Robot;
 /**
  * Add your docs here.
  */
-public class SwerveDrive extends Subsystem {
+public class SwerveDrive extends Subsystem implements PIDOutput {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
 
   public SwerveModule swerveModuleFrontRight, swerveModuleFrontLeft, swerveModuleRearRight, swerveModuleRearLeft;
-  private final double l = 25.75, w = 21, r = Math.sqrt((l * l) + (w * w)), L_OVER_R = l / r, W_OVER_R = w / r;
-      //MIN_X = 0.05, MIN_Y = 0.075, MIN_Z = 0.05
+  private final double w = 25.75, l = 21, r = Math.sqrt((l * l) + (w * w)), L_OVER_R = l / r, W_OVER_R = w / r;
+  // MIN_X = 0.05, MIN_Y = 0.075, MIN_Z = 0.05
   private double a, b, c, d, C_D_Error = 0.19, A_B_Error = 0.19;
   private boolean fieldOriented, isHoldingAngle = false;
   private double frAngle, flAngle, rrAngle, rlAngle;
+  private PIDController targetPid;
 
   @Override
   public void initDefaultCommand() {
@@ -53,6 +57,29 @@ public class SwerveDrive extends Subsystem {
 
     SmartDashboard.putNumber("A-B Error", A_B_Error);
     SmartDashboard.putNumber("C-D Error", C_D_Error);
+
+    targetPid = new PIDController(Constants.TARGET_P, Constants.TARGET_I, Constants.TARGET_D, Robot.navx, this);
+
+    targetPid.setInputRange(-180, 180);
+    targetPid.setOutputRange(-1, 1);
+    targetPid.setContinuous();
+    targetPid.setAbsoluteTolerance(0.5);
+    targetPid.setPIDSourceType(PIDSourceType.kDisplacement);
+  }
+
+  @Override
+  public void pidWrite(double output) {
+    this.set(0, 0, output);
+  }
+
+  public void disablePID() {
+    if (targetPid.isEnabled()) {
+      targetPid.disable();
+    }
+  }
+
+  public void enablePID() {
+    targetPid.enable();
   }
 
   public void setFOD(boolean fod) {
@@ -63,6 +90,23 @@ public class SwerveDrive extends Subsystem {
     Robot.navx.reset();
   }
 
+  public void rotateToAngleInPlace(double setAngle) {
+    targetPid.setSetpoint(setAngle);
+    this.enablePID();
+
+    /*
+     * double currentAngle = Robot.navx.getYaw();
+     * 
+     * double zVal = 0.5;
+     * 
+     * if (currentAngle > setAngle) { zVal = -0.5; while (currentAngle - setAngle >
+     * 2) { Robot.swerveDrive.set(0, 0, zVal); currentAngle = Robot.navx.getYaw(); }
+     * } else { while (currentAngle - setAngle < -2) { Robot.swerveDrive.set(0, 0,
+     * zVal); currentAngle = Robot.navx.getYaw(); } }
+     */
+
+  }
+
   public void set(double x, double y, double z) {
     // Setup
 
@@ -71,7 +115,7 @@ public class SwerveDrive extends Subsystem {
 
     if (fieldOriented) {
       double angle = Robot.navx.getAngle() * Math.PI / 180.0;
-      SmartDashboard.putNumber("Angle (Navx)", angle * 180.0 / Math.PI);
+      SmartDashboard.putNumber("Angle (Navx)", Robot.navx.getYaw());
       double temp = y * Math.cos(angle) + x * Math.sin(angle);
       x = -y * Math.sin(angle) + x * Math.cos(angle);
       y = temp;
@@ -85,7 +129,7 @@ public class SwerveDrive extends Subsystem {
     A_B_Error = SmartDashboard.getNumber("A-B Error", A_B_Error);
     C_D_Error = SmartDashboard.getNumber("C-D Error", C_D_Error);
 
-    if(Math.abs(c) < C_D_Error && Math.abs(a) < A_B_Error) {
+    if (Math.abs(c) < C_D_Error && Math.abs(a) < A_B_Error) {
       a = b = c = d = 0;
     }
 
