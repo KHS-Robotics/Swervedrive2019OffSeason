@@ -7,6 +7,7 @@
 
 package frc.robot.commands;
 
+import frc.robot.Limelight;
 import frc.robot.OI;
 import frc.robot.Robot;
 import frc.robot.subsystems.SwerveDrive;
@@ -16,7 +17,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class DriveSwerveWithXbox extends Command {
   public double x, y, z;
-  boolean settingAngle = false;
 
   public DriveSwerveWithXbox() {
     this.requires(Robot.swerveDrive);
@@ -49,17 +49,17 @@ public class DriveSwerveWithXbox extends Command {
 
     if(Math.abs(x) + Math.abs(y) + Math.abs(z) > 0.35) {
       Robot.swerveDrive.disablePID();
-      settingAngle = false;
     }
 
+    SmartDashboard.putNumber("Tx", Limelight.getTx());
+
     if (OI.xboxController.getYButtonPressed()) {
-      Robot.swerveDrive.rotateToAngleInPlace(0.0);
-      settingAngle = true;
+      Robot.swerveDrive.rotateToAngleInPlace(Robot.navx.getAngle() + Limelight.getTx());
     } else {
       Robot.swerveDrive.set(Math.abs(x) > 0.05 ? x : 0, Math.abs(y) > 0.05 ? y : 0, Math.abs(z) > 0.08 ? z : 0);
     }
 
-    Robot.swerveDrive.setFOD(!OI.xboxController.getBumper(Hand.kLeft) || !settingAngle);
+    Robot.swerveDrive.setFOD(!OI.xboxController.getBumper(Hand.kLeft));
   }
 
   // Make this return true when this Command no longer needs to run execute()

@@ -63,7 +63,7 @@ public class SwerveDrive extends Subsystem implements PIDOutput {
     targetPid.setInputRange(-180, 180);
     targetPid.setOutputRange(-1, 1);
     targetPid.setContinuous();
-    targetPid.setAbsoluteTolerance(0.5);
+    targetPid.setAbsoluteTolerance(4);
     targetPid.setPIDSourceType(PIDSourceType.kDisplacement);
   }
 
@@ -94,16 +94,28 @@ public class SwerveDrive extends Subsystem implements PIDOutput {
     targetPid.setSetpoint(setAngle);
     this.enablePID();
 
-    /*
-     * double currentAngle = Robot.navx.getYaw();
-     * 
-     * double zVal = 0.5;
-     * 
-     * if (currentAngle > setAngle) { zVal = -0.5; while (currentAngle - setAngle >
-     * 2) { Robot.swerveDrive.set(0, 0, zVal); currentAngle = Robot.navx.getYaw(); }
-     * } else { while (currentAngle - setAngle < -2) { Robot.swerveDrive.set(0, 0,
-     * zVal); currentAngle = Robot.navx.getYaw(); } }
-     */
+    //double currentAngle = Robot.navx.getYaw();
+    //double zVal = 0.5;
+
+    //if (currentAngle > setAngle) {
+    //  zVal = -0.5;
+    //  while (currentAngle - setAngle > 2) {
+    //    if (currentAngle - setAngle < 10) {
+    //      zVal = -0.3;
+    //    }
+    //    Robot.swerveDrive.set(0, 0, zVal);
+    //    currentAngle = Robot.navx.getYaw();
+    //  }
+    //} else {
+    //  while (currentAngle - setAngle < -2) {
+    //    if (currentAngle - setAngle > -10) {
+    //      zVal = 0.3;
+    //    }
+    //    Robot.swerveDrive.set(0, 0, zVal);
+
+//        currentAngle = Robot.navx.getYaw();
+  //    }
+    //}
 
   }
 
