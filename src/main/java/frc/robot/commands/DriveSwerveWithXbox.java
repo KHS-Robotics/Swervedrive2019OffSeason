@@ -35,8 +35,8 @@ public class DriveSwerveWithXbox extends Command {
   @Override
   protected void execute() { // Order 66
     /*
-     * x = SmartDashboard.getNumber("x", 0); y = SmartDashboard.getNumber("y", 0); z
-     * = SmartDashboard.getNumber("z", 0);
+     * x = SmartDashboard.getNumber("x", 0); y = SmartDashboard.getNumber("y", 0); 
+     * z = SmartDashboard.getNumber("z", 0);
      */
 
     x = OI.xboxController.getX(Hand.kLeft);
