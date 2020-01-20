@@ -16,6 +16,7 @@ import frc.robot.RobotMap;
 import frc.robot.commands.DriveSwerveWithJoysticks;
 import frc.robot.commands.DriveSwerveWithXbox;
 import frc.robot.Constants;
+import frc.robot.Limelight;
 import frc.robot.Robot;
 
 /**
@@ -63,7 +64,7 @@ public class SwerveDrive extends Subsystem implements PIDOutput {
     targetPid.setInputRange(-180, 180);
     targetPid.setOutputRange(-1, 1);
     targetPid.setContinuous();
-    targetPid.setAbsoluteTolerance(4);
+    targetPid.setAbsoluteTolerance(2.5);
     targetPid.setPIDSourceType(PIDSourceType.kDisplacement);
   }
 
@@ -91,32 +92,27 @@ public class SwerveDrive extends Subsystem implements PIDOutput {
   }
 
   public void rotateToAngleInPlace(double setAngle) {
-    targetPid.setSetpoint(setAngle);
+    SmartDashboard.putNumber("Target Angle", setAngle);
+    targetPid.setSetpoint(normalizeYaw(setAngle));
     this.enablePID();
+  }
 
-    //double currentAngle = Robot.navx.getYaw();
-    //double zVal = 0.5;
+  private static double normalizeYaw(double yaw) {
+    while (yaw >= 180) {
+      yaw -= 360;
+    }
+    while (yaw <= -180) {
+      yaw += 360;
+    }
+    return yaw;
+  }
 
-    //if (currentAngle > setAngle) {
-    //  zVal = -0.5;
-    //  while (currentAngle - setAngle > 2) {
-    //    if (currentAngle - setAngle < 10) {
-    //      zVal = -0.3;
-    //    }
-    //    Robot.swerveDrive.set(0, 0, zVal);
-    //    currentAngle = Robot.navx.getYaw();
-    //  }
-    //} else {
-    //  while (currentAngle - setAngle < -2) {
-    //    if (currentAngle - setAngle > -10) {
-    //      zVal = 0.3;
-    //    }
-    //    Robot.swerveDrive.set(0, 0, zVal);
+  public void rotateToTargetInPlace() {
+    rotateToAngleInPlace((Robot.navx.getYaw() + Limelight.getTx()));
+  }
 
-//        currentAngle = Robot.navx.getYaw();
-  //    }
-    //}
-
+  public boolean atSetpoint() {
+    return targetPid.onTarget();
   }
 
   public void set(double x, double y, double z) {
@@ -125,9 +121,10 @@ public class SwerveDrive extends Subsystem implements PIDOutput {
     y = -y;
     // Sets front to actual front
 
+    double angle = Robot.navx.getAngle() * Math.PI / 180.0;
+    SmartDashboard.putNumber("Angle (Navx)", Robot.navx.getYaw());
+
     if (fieldOriented) {
-      double angle = Robot.navx.getAngle() * Math.PI / 180.0;
-      SmartDashboard.putNumber("Angle (Navx)", Robot.navx.getYaw());
       double temp = y * Math.cos(angle) + x * Math.sin(angle);
       x = -y * Math.sin(angle) + x * Math.cos(angle);
       y = temp;
@@ -257,5 +254,6 @@ public class SwerveDrive extends Subsystem implements PIDOutput {
 
   public void stop() {
     set(0, 0, 0);
+    disablePID();
   }
 }
