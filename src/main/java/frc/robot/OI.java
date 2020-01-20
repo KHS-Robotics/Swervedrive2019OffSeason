@@ -10,7 +10,6 @@ package frc.robot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
-import frc.robot.commands.RotateToAngle;
 
 
 /**
@@ -24,7 +23,5 @@ public class OI {
   public static Joystick joystickZ = new Joystick(RobotMap.JOYSTICK_Z);
 
   public OI() {
-    JoystickButton rotateToAngle = new JoystickButton(xboxController, XboxController.Button.kY.value);
-    rotateToAngle.whenPressed(new RotateToAngle());
   }
 }

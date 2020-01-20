@@ -1,5 +1,5 @@
 /*----------------------------------------------------------------------------*/
-/* Copyright (c) 2018 FIRST. All Rights Reserved.                             */
+/* Copyright (c) 2019 FIRST. All Rights Reserved.                             */
 /* Open Source Software - may be modified and shared by FRC teams. The code   */
 /* must be accompanied by the FIRST BSD license file in the root directory of */
 /* the project.                                                               */
@@ -7,105 +7,87 @@
 
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
-
 import edu.wpi.first.wpilibj.AnalogInput;
-import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj.Encoder;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import edu.wpi.first.wpilibj.controller.PIDController;
+import edu.wpi.first.wpilibj.controller.ProfiledPIDController;
+import edu.wpi.first.wpilibj.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.trajectory.TrapezoidProfile;
 
-import edu.wpi.first.wpilibj.PIDController;
-import edu.wpi.first.wpilibj.PIDOutput;
-import edu.wpi.first.wpilibj.PIDSource;
-import edu.wpi.first.wpilibj.PIDSourceType;
+public class SwerveModule {
+  private final AnalogInput ai;
 
-/**
- * Add your docs here.
- */
-public class SwerveModule extends Subsystem {
-  // Put methods for controlling this subsystem
-  // here. Call these from Commands.
-  private static final double MIN_VOLTAGE = 0.2, MAX_VOLTAGE = 4.76, DELTA_VOLTAGE = MAX_VOLTAGE - MIN_VOLTAGE;
-  private double offset;
-  private boolean flipDrive;
-  private WPI_TalonSRX drive, pivot;
-  private AnalogInput ai;
-  private PIDController pivotPID;
-  private boolean isReversed;
+  private static final double kWheelRadius = 0.0508;
+  //private static final int kEncoderResolution = 4096;
 
-  @Override
-  protected void initDefaultCommand() {
-    this.setDefaultCommand(null);
+  //private static final double kModuleMaxAngularVelocity = Drivetrain.kMaxAngularSpeed;
+  //private static final double kModuleMaxAngularAcceleration = 2 * Math.PI; // radians per second squared
+
+  private final WPI_TalonSRX m_driveMotor;
+  private final WPI_TalonSRX m_turningMotor;
+
+  private final Encoder m_driveEncoder = new Encoder(0, 1);
+
+  private final PIDController m_drivePIDController = new PIDController(1, 0, 0);
+
+  /*private final ProfiledPIDController m_turningPIDController
+      = new ProfiledPIDController(1, 0, 0,
+      new TrapezoidProfile.Constraints(kModuleMaxAngularVelocity, kModuleMaxAngularAcceleration));*/
+
+  /**
+   * Constructs a SwerveModule.
+   *
+   * @param driveMotorChannel   ID for the drive motor.
+   * @param turningMotorChannel ID for the turning motor.
+   */
+  public SwerveModule(int driveMotorChannel, int turningMotorChannel, int aiPort) {
+    ai = new AnalogInput(aiPort);
+    m_driveMotor = new WPI_TalonSRX(driveMotorChannel);
+    m_turningMotor = new WPI_TalonSRX(turningMotorChannel);
+
+    // Set the distance per pulse for the drive encoder. We can simply use the
+    // distance traveled for one rotation of the wheel divided by the encoder
+    // resolution.
+    m_driveEncoder.setDistancePerPulse(2 * Math.PI * kWheelRadius / kEncoderResolution);
+
+    // Set the distance (in this case, angle) per pulse for the turning encoder.
+    // This is the the angle through an entire rotation (2 * wpi::math::pi)
+    // divided by the encoder resolution.
+    m_turningEncoder.setDistancePerPulse(2 * Math.PI / kEncoderResolution);
+
+    // Limit the PID Controller's input range between -pi and pi and set the input
+    // to be continuous.
+    m_turningPIDController.enableContinuousInput(-Math.PI, Math.PI);
   }
 
-  public SwerveModule(int pivotPort, int drivePort, int aiChannel, double p, double i, double d, boolean reversed) {
-    ai = new AnalogInput(aiChannel);
-    drive = new WPI_TalonSRX(drivePort);
-    pivot = new WPI_TalonSRX(pivotPort);
-
-    pivotPID = new PIDController(p, i, d, ai, pivot);
-
-    pivotPID.setInputRange(MIN_VOLTAGE, MAX_VOLTAGE);
-    pivotPID.setOutputRange(-1, 1);
-    pivotPID.setContinuous();
-    pivotPID.setPIDSourceType(PIDSourceType.kDisplacement);
-
-    isReversed = reversed;
+  /**
+   * Returns the current state of the module.
+   *
+   * @return The current state of the module.
+   */
+  public SwerveModuleState getState() {
+    return new SwerveModuleState(m_driveEncoder.getRate(), new Rotation2d(m_turningEncoder.get()));
   }
 
-  public SwerveModule(int pivotPort, int drivePort, int aiChannel, double p, double i, double d) {
-    this(pivotPort, drivePort, aiChannel, p, i, d, false);
-  }
+  /**
+   * Sets the desired state for the module.
+   *
+   * @param state Desired state with speed and angle.
+   */
+  public void setDesiredState(SwerveModuleState state) {
+    // Calculate the drive output from the drive PID controller.
+    final var driveOutput = m_drivePIDController.calculate(
+        m_driveEncoder.getRate(), state.speedMetersPerSecond);
 
-  public double getAngleVoltage() {
-    return ai.getAverageVoltage();
-  }
+    // Calculate the turning motor output from the turning PID controller.
+    final var turnOutput = m_turningPIDController.calculate(
+        m_turningEncoder.get(), state.angle.getRadians()
+    );
 
-  public double getAngle() {
-    return toAngle(ai.getAverageVoltage());
-  }
-
-  public void setPid(double p, double i, double d) {
-    pivotPID.setPID(p, i, d);
-  }
-
-  public void setDrive(double output) {
-    output = isReversed ? -output : output;
-    output = flipDrive ? -output : output;
-
-    drive.set(output);
-  }
-
-  public void setPivot(double angle) {
-
-    double dAngle = Math.abs(angle - this.getAngle());
-    flipDrive = dAngle >= 90 && dAngle <= 270;
-
-    if(flipDrive) {
-      angle += 180;
-    }
-
-    pivotPID.setSetpoint(toVoltage(angle));
-    pivotPID.enable();
-  }
-
-  public void set(double power, double angle) {
-    setDrive(power);
-    setPivot(angle);
-  }
-
-  public void stop() {
-    if (pivotPID.isEnabled()) {
-      pivotPID.disable();
-    }
-    drive.set(0);
-  }
-
-  public double toVoltage(double angle) {
-    angle %= 360;
-    angle += 360;
-    return (MIN_VOLTAGE + (DELTA_VOLTAGE * (offset + angle - 360)) / 360.0);
-  }
-
-  public double toAngle(double voltage) {
-    return ((360.0 * (voltage - MIN_VOLTAGE) / DELTA_VOLTAGE) + 360.0 - offset) % 360;
+    // Calculate the turning motor output from the turning PID controller.
+    m_driveMotor.set(driveOutput);
+    m_turningMotor.set(turnOutput);
   }
 }
