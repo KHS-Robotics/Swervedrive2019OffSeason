@@ -13,6 +13,9 @@ import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.wpilibj.kinematics.SwerveDriveOdometry;
+import frc.robot.Constants;
+import frc.robot.Robot;
+import frc.robot.RobotMap;
 
 /**
  * Represents a swerve drive style drivetrain.
@@ -21,17 +24,17 @@ public class SwerveDrive {
   public static final double kMaxSpeed = 3.0; // 3 meters per second
   public static final double kMaxAngularSpeed = Math.PI; // 1/2 rotation per second
 
-  private final Translation2d m_frontLeftLocation = new Translation2d(0.381, 0.381);
-  private final Translation2d m_frontRightLocation = new Translation2d(0.381, -0.381);
-  private final Translation2d m_backLeftLocation = new Translation2d(-0.381, 0.381);
-  private final Translation2d m_backRightLocation = new Translation2d(-0.381, -0.381);
+  private final Translation2d m_frontLeftLocation = new Translation2d(0.327025, 0.2667);
+  private final Translation2d m_frontRightLocation = new Translation2d(0.327025, -0.2667);
+  private final Translation2d m_backLeftLocation = new Translation2d(-0.327025, 0.2667);
+  private final Translation2d m_backRightLocation = new Translation2d(-0.327025, -0.2667);
 
-  private final SwerveModule m_frontLeft = new SwerveModule(1, 2);
-  private final SwerveModule m_frontRight = new SwerveModule(3, 4);
-  private final SwerveModule m_backLeft = new SwerveModule(5, 6);
-  private final SwerveModule m_backRight = new SwerveModule(7, 8);
+  private final SwerveModule m_frontLeft = new SwerveModule(RobotMap.FRONT_LEFT_DRIVE, RobotMap.FRONT_LEFT_PIVOT, RobotMap.FRONT_LEFT_ANALOG, Constants.FRONT_LEFT_P, Constants.FRONT_LEFT_I, Constants.FRONT_LEFT_D, RobotMap.FRONT_LEFT_DRIVE_ENC_A, RobotMap.FRONT_LEFT_DRIVE_ENC_B);
+  private final SwerveModule m_frontRight = new SwerveModule(RobotMap.FRONT_RIGHT_DRIVE, RobotMap.FRONT_RIGHT_PIVOT, RobotMap.FRONT_RIGHT_ANALOG, Constants.FRONT_RIGHT_P, Constants.FRONT_RIGHT_I, Constants.FRONT_RIGHT_D, RobotMap.FRONT_RIGHT_DRIVE_ENC_A, RobotMap.FRONT_RIGHT_DRIVE_ENC_B);
+  private final SwerveModule m_backLeft = new SwerveModule(RobotMap.REAR_LEFT_DRIVE, RobotMap.REAR_LEFT_PIVOT, RobotMap.REAR_LEFT_ANALOG,Constants.REAR_LEFT_P, Constants.REAR_LEFT_I, Constants.REAR_LEFT_D, RobotMap.REAR_LEFT_DRIVE_ENC_A, RobotMap.REAR_LEFT_DRIVE_ENC_B);
+  private final SwerveModule m_backRight = new SwerveModule(RobotMap.REAR_RIGHT_DRIVE, RobotMap.REAR_RIGHT_PIVOT, RobotMap.REAR_RIGHT_ANALOG, Constants.REAR_RIGHT_P, Constants.REAR_RIGHT_I, Constants.REAR_RIGHT_D, RobotMap.REAR_RIGHT_DRIVE_ENC_A, RobotMap.REAR_RIGHT_DRIVE_ENC_B);
 
-  private final AnalogGyro m_gyro = new AnalogGyro(0);
+  //private final AnalogGyro m_gyro = new AnalogGyro(0);
 
   private final SwerveDriveKinematics m_kinematics = new SwerveDriveKinematics(m_frontLeftLocation,
       m_frontRightLocation, m_backLeftLocation, m_backRightLocation);
@@ -39,7 +42,7 @@ public class SwerveDrive {
   private final SwerveDriveOdometry m_odometry = new SwerveDriveOdometry(m_kinematics, getAngle());
 
   public SwerveDrive() {
-    m_gyro.reset();
+    Robot.navx.reset();
   }
 
   /**
@@ -49,7 +52,7 @@ public class SwerveDrive {
    */
   public Rotation2d getAngle() {
     // Negating the angle because WPILib gyros are CW positive.
-    return Rotation2d.fromDegrees(-m_gyro.getAngle());
+    return Rotation2d.fromDegrees(Robot.navx.getAngle());
   }
 
   /**

@@ -20,21 +20,20 @@ public class SwerveModule {
   private final AnalogInput ai;
 
   private static final double kWheelRadius = 0.0508;
-  //private static final int kEncoderResolution = 4096;
+  private static double p, i, d;
+  private static final int kEncoderResolution = 4096;
 
-  //private static final double kModuleMaxAngularVelocity = Drivetrain.kMaxAngularSpeed;
-  //private static final double kModuleMaxAngularAcceleration = 2 * Math.PI; // radians per second squared
+  private static final double kModuleMaxAngularVelocity = SwerveDrive.kMaxAngularSpeed;
+  private static final double kModuleMaxAngularAcceleration = 2 * Math.PI; // radians per second squared
 
   private final WPI_TalonSRX m_driveMotor;
   private final WPI_TalonSRX m_turningMotor;
 
-  private final Encoder m_driveEncoder = new Encoder(0, 1);
+  private final Encoder m_driveEncoder;
+
+  private final PIDController m_turningPIDController;
 
   private final PIDController m_drivePIDController = new PIDController(1, 0, 0);
-
-  /*private final ProfiledPIDController m_turningPIDController
-      = new ProfiledPIDController(1, 0, 0,
-      new TrapezoidProfile.Constraints(kModuleMaxAngularVelocity, kModuleMaxAngularAcceleration));*/
 
   /**
    * Constructs a SwerveModule.
@@ -42,24 +41,31 @@ public class SwerveModule {
    * @param driveMotorChannel   ID for the drive motor.
    * @param turningMotorChannel ID for the turning motor.
    */
-  public SwerveModule(int driveMotorChannel, int turningMotorChannel, int aiPort) {
+  public SwerveModule(int driveMotorChannel, int turningMotorChannel, int aiPort, double pVal, double iVal, double dVal, int encA, int encB) {
     ai = new AnalogInput(aiPort);
     m_driveMotor = new WPI_TalonSRX(driveMotorChannel);
     m_turningMotor = new WPI_TalonSRX(turningMotorChannel);
+
+    p = pVal;
+    i = iVal;
+    d = dVal;
+
+    m_turningPIDController = new PIDController(p, i, d);
+    m_driveEncoder = new Encoder(encA, encB);
 
     // Set the distance per pulse for the drive encoder. We can simply use the
     // distance traveled for one rotation of the wheel divided by the encoder
     // resolution.
     m_driveEncoder.setDistancePerPulse(2 * Math.PI * kWheelRadius / kEncoderResolution);
 
-    // Set the distance (in this case, angle) per pulse for the turning encoder.
-    // This is the the angle through an entire rotation (2 * wpi::math::pi)
-    // divided by the encoder resolution.
-    m_turningEncoder.setDistancePerPulse(2 * Math.PI / kEncoderResolution);
+    // // Set the distance (in this case, angle) per pulse for the turning encoder.
+    // // This is the the angle through an entire rotation (2 * wpi::math::pi)
+    // // divided by the encoder resolution.
+    // ai.setDistancePerPulse(2 * Math.PI / kEncoderResolution);
 
     // Limit the PID Controller's input range between -pi and pi and set the input
     // to be continuous.
-    m_turningPIDController.enableContinuousInput(-Math.PI, Math.PI);
+    //m_turningPIDController.enableContinuousInput(-Math.PI, Math.PI);
   }
 
   /**
@@ -68,7 +74,7 @@ public class SwerveModule {
    * @return The current state of the module.
    */
   public SwerveModuleState getState() {
-    return new SwerveModuleState(m_driveEncoder.getRate(), new Rotation2d(m_turningEncoder.get()));
+    return new SwerveModuleState(m_driveEncoder.getRate(), new Rotation2d(ai.getAverageVoltage()));
   }
 
   /**
@@ -83,7 +89,7 @@ public class SwerveModule {
 
     // Calculate the turning motor output from the turning PID controller.
     final var turnOutput = m_turningPIDController.calculate(
-        m_turningEncoder.get(), state.angle.getRadians()
+        ai.getAverageVoltage(), state.angle.getRadians()
     );
 
     // Calculate the turning motor output from the turning PID controller.

@@ -7,6 +7,8 @@
 
 package frc.robot;
 
+import com.kauailabs.navx.frc.AHRS;
+
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.XboxController;
@@ -15,6 +17,7 @@ import frc.robot.subsystems.SwerveDrive;
 public class Robot extends TimedRobot {
   private final XboxController m_controller = new XboxController(0);
   private final SwerveDrive m_swerve = new SwerveDrive();
+  public final static AHRS navx = new AHRS();
 
   @Override
   public void autonomousPeriodic() {
