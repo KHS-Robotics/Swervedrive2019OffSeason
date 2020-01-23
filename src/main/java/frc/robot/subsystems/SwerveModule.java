@@ -21,13 +21,10 @@ public class SwerveModule {
   private static double p, i, d;
   private static final int kEncoderResolution = 2048;
 
-  private static final double kWheelRadius = 0.1016, MIN_VOLTAGE = 0.2, MAX_VOLTAGE = 4.76,
+  private static final double MIN_VOLTAGE = 0.2, MAX_VOLTAGE = 4.76,
       DELTA_VOLTAGE = MAX_VOLTAGE - MIN_VOLTAGE,
-      distancePerPulse = (0.0254 * 4 * Math.PI * 12 * 19) / (kEncoderResolution * 32 * 60),
-      kModuleMaxAngularVelocity = SwerveDrive.kMaxAngularSpeed, kModuleMaxAngularAcceleration = 2 * Math.PI; // radians
-                                                                                                             // per
-                                                                                                             // second
-                                                                                                             // squared;
+      distancePerPulse = (0.0254 * 4 * Math.PI * 12 * 19) / (kEncoderResolution * 32 * 60);
+      //kModuleMaxAngularVelocity = SwerveDrive.kMaxAngularSpeed, kModuleMaxAngularAcceleration = 2 * Math.PI; // radians per second squared;
 
   private static double offset;
 
@@ -86,8 +83,7 @@ public class SwerveModule {
     SmartDashboard.putNumber("D", 0);
   }
 
-  public SwerveModule(int driveMotorChannel, int turningMotorChannel, int aiPort, double pVal, double iVal, double dVal,
-      int encA, int encB) {
+  public SwerveModule(int driveMotorChannel, int turningMotorChannel, int aiPort, double pVal, double iVal, double dVal, int encA, int encB) {
     this(driveMotorChannel, turningMotorChannel, aiPort, pVal, iVal, dVal, encA, encB, 0);
   }
 
