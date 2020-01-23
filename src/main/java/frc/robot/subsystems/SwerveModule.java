@@ -13,7 +13,6 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.kinematics.SwerveModuleState;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class SwerveModule {
   private final AnalogInput ai;
@@ -27,6 +26,7 @@ public class SwerveModule {
       //kModuleMaxAngularVelocity = SwerveDrive.kMaxAngularSpeed, kModuleMaxAngularAcceleration = 2 * Math.PI; // radians per second squared;
 
   private static double offset;
+  private static boolean isInverted;
 
   private final WPI_TalonSRX m_driveMotor;
   private final WPI_TalonSRX m_turningMotor;
@@ -35,7 +35,7 @@ public class SwerveModule {
 
   private final PIDController m_turningPIDController;
 
-  private final PIDController m_drivePIDController = new PIDController(1 / 10.0, 0, 0);
+  //private final PIDController m_drivePIDController = new PIDController(1 / 10.0, 0, 0);
 
   /**
    * Constructs a SwerveModule.
@@ -51,8 +51,8 @@ public class SwerveModule {
    * @param offset              Offset of the Pivot Motor, 0 by default
    */
   public SwerveModule(int driveMotorChannel, int turningMotorChannel, int aiPort, double turnP, double turnI,
-      double turnD, int encA, int encB, double offset) {
-    this.offset = offset;
+      double turnD, int encA, int encB, boolean reversed) {
+    isInverted = reversed;
 
     ai = new AnalogInput(aiPort);
     m_driveMotor = new WPI_TalonSRX(driveMotorChannel);
@@ -78,13 +78,10 @@ public class SwerveModule {
     // Limit the PID Controller's input range between -pi and pi and set the input
     // to be continuous.
     m_turningPIDController.enableContinuousInput(-Math.PI, Math.PI);
-    SmartDashboard.putNumber("P", 0.17);
-    SmartDashboard.putNumber("I", 0);
-    SmartDashboard.putNumber("D", 0);
   }
 
   public SwerveModule(int driveMotorChannel, int turningMotorChannel, int aiPort, double pVal, double iVal, double dVal, int encA, int encB) {
-    this(driveMotorChannel, turningMotorChannel, aiPort, pVal, iVal, dVal, encA, encB, 0);
+    this(driveMotorChannel, turningMotorChannel, aiPort, pVal, iVal, dVal, encA, encB, false);
   }
 
   /**
@@ -101,19 +98,17 @@ public class SwerveModule {
    *
    * @param state Desired state with speed and angle.
    */
-  public void setDesiredState(SwerveModuleState state) {
-    m_drivePIDController.setP(SmartDashboard.getNumber("P", 0.17));
-    m_drivePIDController.setI(SmartDashboard.getNumber("I", 0));
-    m_drivePIDController.setD(SmartDashboard.getNumber("D", 0));
+  public double setDesiredState(SwerveModuleState state) {
     // Calculate the drive output from the drive PID controller.
-    final var driveOutput = m_drivePIDController.calculate(m_driveEncoder.getRate(), state.speedMetersPerSecond);
+    //final var driveOutput = m_drivePIDController.calculate(m_driveEncoder.getRate(), state.speedMetersPerSecond);
 
     // Calculate the turning motor output from the turning PID controller.
     final var turnOutput = m_turningPIDController.calculate(toRadians(ai.getAverageVoltage()), state.angle.getRadians());
 
     // Calculate the turning motor output from the turning PID controller.
-    m_driveMotor.set(driveOutput);
+    m_driveMotor.set(isInverted ? -state.speedMetersPerSecond : state.speedMetersPerSecond);
     m_turningMotor.set(turnOutput);
+    return toAngle(turnOutput);
   }
 
   public static double toAngle(double voltage) {
