@@ -21,11 +21,15 @@ public class SwerveModule {
   private static double p, i, d;
   private static final int kEncoderResolution = 2048;
 
-  private static final double kWheelRadius = 0.1016, MIN_VOLTAGE = 0.2, MAX_VOLTAGE = 4.76, DELTA_VOLTAGE = MAX_VOLTAGE - MIN_VOLTAGE,
-   distancePerPulse = (0.0254 * 4 * Math.PI * 12 * 19) / (kEncoderResolution * 32 * 60),
-   kModuleMaxAngularVelocity = SwerveDrive.kMaxAngularSpeed, kModuleMaxAngularAcceleration = 2 * Math.PI; // radians per second squared;
-  
-   private static double offset;
+  private static final double kWheelRadius = 0.1016, MIN_VOLTAGE = 0.2, MAX_VOLTAGE = 4.76,
+      DELTA_VOLTAGE = MAX_VOLTAGE - MIN_VOLTAGE,
+      distancePerPulse = (0.0254 * 4 * Math.PI * 12 * 19) / (kEncoderResolution * 32 * 60),
+      kModuleMaxAngularVelocity = SwerveDrive.kMaxAngularSpeed, kModuleMaxAngularAcceleration = 2 * Math.PI; // radians
+                                                                                                             // per
+                                                                                                             // second
+                                                                                                             // squared;
+
+  private static double offset;
 
   private final WPI_TalonSRX m_driveMotor;
   private final WPI_TalonSRX m_turningMotor;
@@ -41,17 +45,25 @@ public class SwerveModule {
    *
    * @param driveMotorChannel   ID for the drive motor.
    * @param turningMotorChannel ID for the turning motor.
+   * @param aiPort              Port num of the Analog Input
+   * @param turnP               P Val of Turn PID
+   * @param turnI               I Val of Turn PID
+   * @param TurnD               D Val of Turn PID
+   * @param encA                Port of Encoder A Channel
+   * @param encB                Port of Encoder B Channel
+   * @param offset              Offset of the Motor, 0 by default
    */
-  public SwerveModule(int driveMotorChannel, int turningMotorChannel, int aiPort, double pVal, double iVal, double dVal, int encA, int encB, double offset) {
+  public SwerveModule(int driveMotorChannel, int turningMotorChannel, int aiPort, double turnP, double turnI,
+      double turnD, int encA, int encB, double offset) {
     this.offset = offset;
 
     ai = new AnalogInput(aiPort);
     m_driveMotor = new WPI_TalonSRX(driveMotorChannel);
     m_turningMotor = new WPI_TalonSRX(turningMotorChannel);
 
-    p = pVal;
-    i = iVal;
-    d = dVal;
+    p = turnP;
+    i = turnI;
+    d = turnD;
 
     m_turningPIDController = new PIDController(p, i, d);
     m_driveEncoder = new Encoder(encA, encB);
@@ -74,7 +86,8 @@ public class SwerveModule {
     SmartDashboard.putNumber("D", 0);
   }
 
-  public SwerveModule(int driveMotorChannel, int turningMotorChannel, int aiPort, double pVal, double iVal, double dVal, int encA, int encB) {
+  public SwerveModule(int driveMotorChannel, int turningMotorChannel, int aiPort, double pVal, double iVal, double dVal,
+      int encA, int encB) {
     this(driveMotorChannel, turningMotorChannel, aiPort, pVal, iVal, dVal, encA, encB, 0);
   }
 
@@ -100,7 +113,8 @@ public class SwerveModule {
     final var driveOutput = m_drivePIDController.calculate(m_driveEncoder.getRate(), state.speedMetersPerSecond);
 
     // Calculate the turning motor output from the turning PID controller.
-    final var turnOutput = m_turningPIDController.calculate(toRadians(ai.getAverageVoltage()), state.angle.getRadians());
+    final var turnOutput = m_turningPIDController.calculate(toRadians(ai.getAverageVoltage()),
+        state.angle.getRadians());
 
     // Calculate the turning motor output from the turning PID controller.
     m_driveMotor.set(driveOutput);
