@@ -7,6 +7,7 @@
 
 package frc.robot.commands;
 
+import frc.robot.ButtonMap;
 import frc.robot.Limelight;
 import frc.robot.OI;
 import frc.robot.Robot;
@@ -55,7 +56,7 @@ public class DriveSwerveWithXbox extends Command {
     
     Robot.swerveDrive.set(Math.abs(x) > 0.05 ? x : 0, Math.abs(y) > 0.05 ? y : 0, Math.abs(z) > 0.08 ? z : 0);
 
-    Robot.swerveDrive.setFOD(!OI.xboxController.getBumper(Hand.kLeft));
+    Robot.swerveDrive.setFOD(!OI.xboxController.getBumper(Hand.kLeft));//getRawButton(ButtonMap.XboxButton.toggleFOD));
   }
 
   // Make this return true when this Command no longer needs to run execute()
