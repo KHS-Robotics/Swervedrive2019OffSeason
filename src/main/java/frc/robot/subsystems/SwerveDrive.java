@@ -29,12 +29,50 @@ public class SwerveDrive {
   private final Translation2d m_backLeftLocation = new Translation2d(-0.327025, 0.2667);
   private final Translation2d m_backRightLocation = new Translation2d(-0.327025, -0.2667);
 
-  private final SwerveModule m_frontLeft = new SwerveModule(RobotMap.FRONT_LEFT_DRIVE, RobotMap.FRONT_LEFT_PIVOT, RobotMap.FRONT_LEFT_ANALOG, Constants.FRONT_LEFT_P, Constants.FRONT_LEFT_I, Constants.FRONT_LEFT_D, RobotMap.FRONT_LEFT_DRIVE_ENC_A, RobotMap.FRONT_LEFT_DRIVE_ENC_B, Math.PI / 2);
-  private final SwerveModule m_frontRight = new SwerveModule(RobotMap.FRONT_RIGHT_DRIVE, RobotMap.FRONT_RIGHT_PIVOT, RobotMap.FRONT_RIGHT_ANALOG, Constants.FRONT_RIGHT_P, Constants.FRONT_RIGHT_I, Constants.FRONT_RIGHT_D, RobotMap.FRONT_RIGHT_DRIVE_ENC_A, RobotMap.FRONT_RIGHT_DRIVE_ENC_B);
-  private final SwerveModule m_backLeft = new SwerveModule(RobotMap.REAR_LEFT_DRIVE, RobotMap.REAR_LEFT_PIVOT, RobotMap.REAR_LEFT_ANALOG,Constants.REAR_LEFT_P, Constants.REAR_LEFT_I, Constants.REAR_LEFT_D, RobotMap.REAR_LEFT_DRIVE_ENC_A, RobotMap.REAR_LEFT_DRIVE_ENC_B, Math.PI / 2);
-  private final SwerveModule m_backRight = new SwerveModule(RobotMap.REAR_RIGHT_DRIVE, RobotMap.REAR_RIGHT_PIVOT, RobotMap.REAR_RIGHT_ANALOG, Constants.REAR_RIGHT_P, Constants.REAR_RIGHT_I, Constants.REAR_RIGHT_D, RobotMap.REAR_RIGHT_DRIVE_ENC_A, RobotMap.REAR_RIGHT_DRIVE_ENC_B);
+  private final SwerveModule m_frontLeft = new SwerveModule(
+    RobotMap.FRONT_LEFT_DRIVE, 
+    RobotMap.FRONT_LEFT_PIVOT,
+    RobotMap.FRONT_LEFT_ANALOG, 
+    Constants.FRONT_LEFT_P, 
+    Constants.FRONT_LEFT_I, 
+    Constants.FRONT_LEFT_D,
+    RobotMap.FRONT_LEFT_DRIVE_ENC_A, 
+    RobotMap.FRONT_LEFT_DRIVE_ENC_B, 
+    Math.PI / 2
+  );
+  private final SwerveModule m_frontRight = new SwerveModule(
+    RobotMap.FRONT_RIGHT_DRIVE,
+    RobotMap.FRONT_RIGHT_PIVOT,
+    RobotMap.FRONT_RIGHT_ANALOG, 
+    Constants.FRONT_RIGHT_P, 
+    Constants.FRONT_RIGHT_I, 
+    Constants.FRONT_RIGHT_D,
+    RobotMap.FRONT_RIGHT_DRIVE_ENC_A, 
+    RobotMap.FRONT_RIGHT_DRIVE_ENC_B
+  );
+  private final SwerveModule m_backLeft = new SwerveModule(
+    RobotMap.REAR_LEFT_DRIVE, 
+    RobotMap.REAR_LEFT_PIVOT,
+    RobotMap.REAR_LEFT_ANALOG, 
+    Constants.REAR_LEFT_P, 
+    Constants.REAR_LEFT_I, 
+    Constants.REAR_LEFT_D,
+    RobotMap.REAR_LEFT_DRIVE_ENC_A, 
+    RobotMap.REAR_LEFT_DRIVE_ENC_B, 
+    Math.PI / 2
+  );
+  private final SwerveModule m_backRight = new SwerveModule(
+    RobotMap.REAR_RIGHT_DRIVE, 
+    RobotMap.REAR_RIGHT_PIVOT,
+    RobotMap.REAR_RIGHT_ANALOG, 
+    Constants.REAR_RIGHT_P, 
+    Constants.REAR_RIGHT_I, 
+    Constants.REAR_RIGHT_D,
+    RobotMap.REAR_RIGHT_DRIVE_ENC_A, 
+    RobotMap.REAR_RIGHT_DRIVE_ENC_B
+  );
 
-  //private final AnalogGyro m_gyro = new AnalogGyro(0);
+  // private final AnalogGyro m_gyro = new AnalogGyro(0);
 
   private final SwerveDriveKinematics m_kinematics = new SwerveDriveKinematics(m_frontLeftLocation,
       m_frontRightLocation, m_backLeftLocation, m_backRightLocation);
@@ -61,15 +99,14 @@ public class SwerveDrive {
    * @param xSpeed        Speed of the robot in the x direction (forward).
    * @param ySpeed        Speed of the robot in the y direction (sideways).
    * @param rot           Angular rate of the robot.
-   * @param fieldRelative Whether the provided x and y speeds are relative to the field.
+   * @param fieldRelative Whether the provided x and y speeds are relative to the
+   *                      field.
    */
   @SuppressWarnings("ParameterName")
   public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative) {
-    var swerveModuleStates = m_kinematics.toSwerveModuleStates(
-        fieldRelative ? ChassisSpeeds.fromFieldRelativeSpeeds(
-            xSpeed, ySpeed, rot, getAngle())
-            : new ChassisSpeeds(xSpeed, ySpeed, rot)
-    );
+    var swerveModuleStates = m_kinematics
+        .toSwerveModuleStates(fieldRelative ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, getAngle())
+            : new ChassisSpeeds(xSpeed, ySpeed, rot));
     SwerveDriveKinematics.normalizeWheelSpeeds(swerveModuleStates, kMaxSpeed);
     m_frontLeft.setDesiredState(swerveModuleStates[0]);
     m_frontRight.setDesiredState(swerveModuleStates[1]);
@@ -81,12 +118,7 @@ public class SwerveDrive {
    * Updates the field relative position of the robot.
    */
   public void updateOdometry() {
-    m_odometry.update(
-        getAngle(),
-        m_frontLeft.getState(),
-        m_frontRight.getState(),
-        m_backLeft.getState(),
-        m_backRight.getState()
-    );
+    m_odometry.update(getAngle(), m_frontLeft.getState(), m_frontRight.getState(), m_backLeft.getState(),
+        m_backRight.getState());
   }
 }
