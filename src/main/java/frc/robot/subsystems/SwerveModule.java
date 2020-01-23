@@ -68,14 +68,14 @@ public class SwerveModule {
     // Set the distance per pulse for the drive encoder. We can simply use the
     // distance traveled for one rotation of the wheel divided by the encoder
     // resolution.
-    //m_driveEncoder.setDistancePerPulse(distancePerPulse);
+    m_driveEncoder.setDistancePerPulse(distancePerPulse);
 
     // // Set the distance (in this case, angle) per pulse for the turning encoder.
     // // This is the the angle through an entire rotation (2 * wpi::math::pi)
     // // divided by the encoder resolution.
     // ai.setDistancePerPulse(2 * Math.PI / kEncoderResolution);
 
-    // Limit the PID Controller's input range between 0 and 2pi and set the input
+    // Limit the PID Controller's input range between -pi and pi and set the input
     // to be continuous.
     m_turningPIDController.enableContinuousInput(-Math.PI, Math.PI);
   }
@@ -90,7 +90,7 @@ public class SwerveModule {
    * @return The current state of the module.
    */
   public SwerveModuleState getState() {
-    return new SwerveModuleState(m_driveEncoder.getRate(), new Rotation2d(toRadians(ai.getAverageVoltage())));
+    return new SwerveModuleState(m_driveEncoder.getRate(), new Rotation2d(voltsToRadians(ai.getAverageVoltage())));
   }
 
   /**
@@ -103,7 +103,7 @@ public class SwerveModule {
     //final var driveOutput = m_drivePIDController.calculate(m_driveEncoder.getRate(), state.speedMetersPerSecond);
 
     // Calculate the turning motor output from the turning PID controller.
-    final var turnOutput = m_turningPIDController.calculate(toRadians(ai.getAverageVoltage()), state.angle.getRadians());
+    final var turnOutput = m_turningPIDController.calculate(voltsToRadians(ai.getAverageVoltage()), state.angle.getRadians());
 
     // Calculate the turning motor output from the turning PID controller.
     m_driveMotor.set(isInverted ? -state.speedMetersPerSecond : state.speedMetersPerSecond);
@@ -116,7 +116,7 @@ public class SwerveModule {
     return ((360.0 * (voltage - MIN_VOLTAGE) / DELTA_VOLTAGE) + 360.0 - offset) % 360;
   }
 
-  public static double toRadians(double voltage) {
+  public static double voltsToRadians(double voltage) {
     return Math.toRadians(toAngle(voltage));
   }
 }
