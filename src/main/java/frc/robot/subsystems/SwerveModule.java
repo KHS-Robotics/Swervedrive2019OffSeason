@@ -25,7 +25,7 @@ public class SwerveModule {
    distancePerPulse = (0.0254 * 4 * Math.PI * 12 * 19) / (kEncoderResolution * 32 * 60),
    kModuleMaxAngularVelocity = SwerveDrive.kMaxAngularSpeed, kModuleMaxAngularAcceleration = 2 * Math.PI; // radians per second squared;
   
-   private static boolean isOffset = false;
+   private static double offset;
 
   private final WPI_TalonSRX m_driveMotor;
   private final WPI_TalonSRX m_turningMotor;
@@ -42,8 +42,8 @@ public class SwerveModule {
    * @param driveMotorChannel   ID for the drive motor.
    * @param turningMotorChannel ID for the turning motor.
    */
-  public SwerveModule(int driveMotorChannel, int turningMotorChannel, int aiPort, double pVal, double iVal, double dVal, int encA, int encB, boolean offset) {
-    isOffset = offset;
+  public SwerveModule(int driveMotorChannel, int turningMotorChannel, int aiPort, double pVal, double iVal, double dVal, int encA, int encB, double offset) {
+    this.offset = offset;
 
     ai = new AnalogInput(aiPort);
     m_driveMotor = new WPI_TalonSRX(driveMotorChannel);
@@ -75,7 +75,7 @@ public class SwerveModule {
   }
 
   public SwerveModule(int driveMotorChannel, int turningMotorChannel, int aiPort, double pVal, double iVal, double dVal, int encA, int encB) {
-    this(driveMotorChannel, turningMotorChannel, aiPort, pVal, iVal, dVal, encA, encB, false);
+    this(driveMotorChannel, turningMotorChannel, aiPort, pVal, iVal, dVal, encA, encB, 0);
   }
 
   /**
@@ -100,7 +100,7 @@ public class SwerveModule {
     final var driveOutput = m_drivePIDController.calculate(m_driveEncoder.getRate(), state.speedMetersPerSecond);
 
     // Calculate the turning motor output from the turning PID controller.
-    final var turnOutput = m_turningPIDController.calculate(isOffset ? toRadians(ai.getAverageVoltage()) + .5 * Math.PI : toRadians(ai.getAverageVoltage()), state.angle.getRadians());
+    final var turnOutput = m_turningPIDController.calculate(toRadians(ai.getAverageVoltage()), state.angle.getRadians());
 
     // Calculate the turning motor output from the turning PID controller.
     m_driveMotor.set(driveOutput);
@@ -108,7 +108,7 @@ public class SwerveModule {
   }
 
   public static double toAngle(double voltage) {
-    return ((360.0 * (voltage - MIN_VOLTAGE) / DELTA_VOLTAGE) + 360.0) % 360;
+    return ((360.0 * (voltage - MIN_VOLTAGE) / DELTA_VOLTAGE) + 360.0 - offset) % 360;
   }
 
   public static double toRadians(double voltage) {
