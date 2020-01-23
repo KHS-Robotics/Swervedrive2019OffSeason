@@ -75,7 +75,7 @@ public class SwerveModule {
     // // divided by the encoder resolution.
     // ai.setDistancePerPulse(2 * Math.PI / kEncoderResolution);
 
-    // Limit the PID Controller's input range between -pi and pi and set the input
+    // Limit the PID Controller's input range between 0 and 2pi and set the input
     // to be continuous.
     m_turningPIDController.enableContinuousInput(-Math.PI, Math.PI);
   }
@@ -108,7 +108,8 @@ public class SwerveModule {
     // Calculate the turning motor output from the turning PID controller.
     m_driveMotor.set(isInverted ? -state.speedMetersPerSecond : state.speedMetersPerSecond);
     m_turningMotor.set(turnOutput);
-    return toAngle(turnOutput);
+
+    return state.angle.getDegrees();
   }
 
   public static double toAngle(double voltage) {
