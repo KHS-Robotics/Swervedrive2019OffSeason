@@ -107,7 +107,7 @@ public class SwerveModule {
 
     // Calculate the turning motor output from the turning PID controller.
     m_driveMotor.set(isInverted ? -state.speedMetersPerSecond : state.speedMetersPerSecond);
-    m_turningMotor.set(radiansToVolts(turnOutput));
+    m_turningMotor.set(turnOutput);
 
     return state.angle.getDegrees();
   }
