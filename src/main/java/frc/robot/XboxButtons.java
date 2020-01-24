@@ -10,23 +10,23 @@ package frc.robot;
 /**
  * Add your docs here.
  */
-public class ButtonMap {
-    public enum XboxButton {
-		toggleFOD(5),       // Left Bumper
-		kBumperRight(6),    // Right Bumper
-		kStickLeft(9),      // Left Joystick
-		kStickRight(10),    // Right Joysick
-		kA(1),              // A Button
-		kB(2),              // B Button
-		kX(3),              // X Button
-		lockOn(4),          // Y Button
-		restLimelight(7),   // Back Button
-		resetNavx(8);       // Start Button
+// public class ButtonMap {
+public enum XboxButtons {
+	toggleFOD(5), 		// Left Bumper
+	kBumperRight(6), 	// Right Bumper
+	kStickLeft(9), 		// Left Joystick
+	kStickRight(10), 	// Right Joysick
+	kA(1), 				// A Button
+	kB(2), 				// B Button
+	kX(3), 				// X Button
+	lockOn(4), 			// Y Button
+	restLimelight(7), 	// Back Button
+	resetNavx(8); 		// Start Button
 
-		private int value;
+	private int value;
 
-		XboxButton(int value) {
-			this.value = value;
-		}
+	XboxButtons(int value) {
+		this.value = value;
 	}
+
 }
