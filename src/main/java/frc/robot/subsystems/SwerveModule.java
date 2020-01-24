@@ -68,7 +68,7 @@ public class SwerveModule {
     // Set the distance per pulse for the drive encoder. We can simply use the
     // distance traveled for one rotation of the wheel divided by the encoder
     // resolution.
-    m_driveEncoder.setDistancePerPulse(distancePerPulse);
+    //m_driveEncoder.setDistancePerPulse(distancePerPulse);
 
     // // Set the distance (in this case, angle) per pulse for the turning encoder.
     // // This is the the angle through an entire rotation (2 * wpi::math::pi)
@@ -107,7 +107,7 @@ public class SwerveModule {
 
     // Calculate the turning motor output from the turning PID controller.
     m_driveMotor.set(isInverted ? -state.speedMetersPerSecond : state.speedMetersPerSecond);
-    m_turningMotor.set(turnOutput);
+    m_turningMotor.set(radiansToVolts(turnOutput));
 
     return state.angle.getDegrees();
   }
@@ -118,5 +118,9 @@ public class SwerveModule {
 
   public static double voltsToRadians(double voltage) {
     return Math.toRadians(toAngle(voltage));
+  }
+
+  public static double radiansToVolts(double radians) {
+    return (((Math.toDegrees(radians) - 360.0) * DELTA_VOLTAGE) / 360.0) + MIN_VOLTAGE;
   }
 }
