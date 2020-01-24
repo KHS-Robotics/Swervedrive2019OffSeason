@@ -24,10 +24,10 @@ public class SwerveDrive {
   public static final double kMaxSpeed = 1.0; // 1 meters per second
   public static final double kMaxAngularSpeed = 1; // 1 radian per second
 
-  private final Translation2d m_frontLeftLocation = new Translation2d(0.327025, 0.2667);
-  private final Translation2d m_frontRightLocation = new Translation2d(0.327025, -0.2667);
-  private final Translation2d m_backLeftLocation = new Translation2d(-0.327025, 0.2667);
-  private final Translation2d m_backRightLocation = new Translation2d(-0.327025, -0.2667);
+  private final Translation2d m_frontLeftLocation = new Translation2d(-0.2667, 0.327025);
+  private final Translation2d m_frontRightLocation = new Translation2d(-0.2667, -0.327025);
+  private final Translation2d m_backLeftLocation = new Translation2d(0.2667, 0.327025);
+  private final Translation2d m_backRightLocation = new Translation2d(0.2667, -0.327025);
 
   private final SwerveModule m_frontLeft = new SwerveModule(
     RobotMap.FRONT_LEFT_DRIVE, 
@@ -37,8 +37,7 @@ public class SwerveDrive {
     Constants.FRONT_LEFT_I, 
     Constants.FRONT_LEFT_D,
     RobotMap.FRONT_LEFT_DRIVE_ENC_A, 
-    RobotMap.FRONT_LEFT_DRIVE_ENC_B, 
-    true
+    RobotMap.FRONT_LEFT_DRIVE_ENC_B
   );
   private final SwerveModule m_frontRight = new SwerveModule(
     RobotMap.FRONT_RIGHT_DRIVE,
@@ -48,7 +47,7 @@ public class SwerveDrive {
     Constants.FRONT_RIGHT_I, 
     Constants.FRONT_RIGHT_D,
     RobotMap.FRONT_RIGHT_DRIVE_ENC_A, 
-    RobotMap.FRONT_RIGHT_DRIVE_ENC_B, 
+    RobotMap.FRONT_RIGHT_DRIVE_ENC_B,
     true
   );
   private final SwerveModule m_backLeft = new SwerveModule(
@@ -59,8 +58,7 @@ public class SwerveDrive {
     Constants.REAR_LEFT_I, 
     Constants.REAR_LEFT_D,
     RobotMap.REAR_LEFT_DRIVE_ENC_A, 
-    RobotMap.REAR_LEFT_DRIVE_ENC_B, 
-    true
+    RobotMap.REAR_LEFT_DRIVE_ENC_B
   );
   private final SwerveModule m_backRight = new SwerveModule(
     RobotMap.REAR_RIGHT_DRIVE, 
@@ -70,7 +68,7 @@ public class SwerveDrive {
     Constants.REAR_RIGHT_I, 
     Constants.REAR_RIGHT_D,
     RobotMap.REAR_RIGHT_DRIVE_ENC_A, 
-    RobotMap.REAR_RIGHT_DRIVE_ENC_B, 
+    RobotMap.REAR_RIGHT_DRIVE_ENC_B,
     true
   );
 

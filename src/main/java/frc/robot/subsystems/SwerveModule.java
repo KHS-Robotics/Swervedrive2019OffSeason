@@ -17,16 +17,16 @@ import edu.wpi.first.wpilibj.kinematics.SwerveModuleState;
 public class SwerveModule {
   private final AnalogInput ai;
 
-  private static double p, i, d;
+  private double p, i, d;
   private static final int kEncoderResolution = 2048;
 
   private static final double MIN_VOLTAGE = 0.2, MAX_VOLTAGE = 4.76,
-      DELTA_VOLTAGE = MAX_VOLTAGE - MIN_VOLTAGE,
-      distancePerPulse = (0.0254 * 4 * Math.PI * 12 * 19) / (kEncoderResolution * 32 * 60);
+      DELTA_VOLTAGE = MAX_VOLTAGE - MIN_VOLTAGE;
+      //distancePerPulse = (0.0254 * 4 * Math.PI * 12 * 19) / (kEncoderResolution * 32 * 60);
       //kModuleMaxAngularVelocity = SwerveDrive.kMaxAngularSpeed, kModuleMaxAngularAcceleration = 2 * Math.PI; // radians per second squared;
 
-  private static double offset;
-  private static boolean isInverted;
+  private double offset;
+  private boolean isInverted;
 
   private final WPI_TalonSRX m_driveMotor;
   private final WPI_TalonSRX m_turningMotor;
@@ -77,7 +77,7 @@ public class SwerveModule {
 
     // Limit the PID Controller's input range between -pi and pi and set the input
     // to be continuous.
-    m_turningPIDController.enableContinuousInput(-Math.PI, Math.PI);
+    m_turningPIDController.enableContinuousInput(MIN_VOLTAGE, MAX_VOLTAGE);
   }
 
   public SwerveModule(int driveMotorChannel, int turningMotorChannel, int aiPort, double pVal, double iVal, double dVal, int encA, int encB) {
@@ -101,26 +101,37 @@ public class SwerveModule {
   public double setDesiredState(SwerveModuleState state) {
     // Calculate the drive output from the drive PID controller.
     //final var driveOutput = m_drivePIDController.calculate(m_driveEncoder.getRate(), state.speedMetersPerSecond);
+    double dAngle = Math.abs(toAngle(ai.getAverageVoltage()) - state.angle.getDegrees());
+    boolean isFlipped = dAngle >= 90 && dAngle <= 270;
 
     // Calculate the turning motor output from the turning PID controller.
-    final var turnOutput = m_turningPIDController.calculate(voltsToRadians(ai.getAverageVoltage()), state.angle.getRadians());
+    final var turnOutput = m_turningPIDController.calculate(ai.getAverageVoltage(), degreesToVolts((state.angle.getDegrees() + 360.0 + (isFlipped ? 180.0 : 0)) % 360.0));
 
     // Calculate the turning motor output from the turning PID controller.
-    m_driveMotor.set(isInverted ? -state.speedMetersPerSecond : state.speedMetersPerSecond);
+    double driveCalculation = state.speedMetersPerSecond;
+
+    if(isFlipped) {
+      driveCalculation = -driveCalculation;
+    }
+    if(isInverted) {
+      driveCalculation = -driveCalculation;
+    }
+
+    m_driveMotor.set(driveCalculation);
     m_turningMotor.set(turnOutput);
 
     return state.angle.getDegrees();
   }
 
-  public static double toAngle(double voltage) {
+  public double toAngle(double voltage) {
     return ((360.0 * (voltage - MIN_VOLTAGE) / DELTA_VOLTAGE) + 360.0 - offset) % 360;
   }
 
-  public static double voltsToRadians(double voltage) {
+  public double voltsToRadians(double voltage) {
     return Math.toRadians(toAngle(voltage));
   }
 
-  public static double radiansToVolts(double radians) {
-    return (((Math.toDegrees(radians) - 360.0) * DELTA_VOLTAGE) / 360.0) + MIN_VOLTAGE;
+  public double degreesToVolts(double angle) {
+    return ((DELTA_VOLTAGE / 360.0) * angle) + MIN_VOLTAGE;
   }
 }
