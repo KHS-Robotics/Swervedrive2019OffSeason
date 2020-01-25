@@ -10,16 +10,22 @@ package frc.robot;
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.commands.DriveSwerveWithXbox;
 import frc.robot.subsystems.SwerveDrive;
 
 public class Robot extends TimedRobot {
-  public final static SwerveDrive swerveDrive = new SwerveDrive();
   public final static AHRS navx = new AHRS();
+  public final static SwerveDrive swerveDrive = new SwerveDrive();
+
+  @Override
+  public void robotInit() {
+    swerveDrive.setDefaultCommand(new DriveSwerveWithXbox());
+  }
 
   @Override
   public void robotPeriodic() {
-    
+    CommandScheduler.getInstance().run();
   }
 
   @Override

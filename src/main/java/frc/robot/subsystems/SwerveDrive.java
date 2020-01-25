@@ -7,7 +7,7 @@
 
 package frc.robot.subsystems;
 
-import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds;
@@ -17,12 +17,11 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.RobotMap;
-import frc.robot.commands.DriveSwerveWithXbox;
 
 /**
  * Represents a swerve drive style drivetrain.
  */
-public class SwerveDrive extends Subsystem {
+public class SwerveDrive extends SubsystemBase {
   public static final double kMaxSpeed = 1.0; // 1 meters per second
   public static final double kMaxAngularSpeed = 1; // 1 radian per second
 
@@ -79,15 +78,15 @@ public class SwerveDrive extends Subsystem {
   private final SwerveDriveKinematics m_kinematics = new SwerveDriveKinematics(m_frontLeftLocation,
       m_frontRightLocation, m_backLeftLocation, m_backRightLocation);
 
-  private final SwerveDriveOdometry m_odometry = new SwerveDriveOdometry(m_kinematics, getAngle());
+  private final SwerveDriveOdometry m_odometry = new SwerveDriveOdometry(m_kinematics, this.getAngle());
 
   public SwerveDrive() {
     Robot.navx.reset();
   }
 
   @Override
-  protected void initDefaultCommand() {
-    setDefaultCommand(new DriveSwerveWithXbox());
+  public void periodic() {
+    SmartDashboard.putNumber("Navx Angle", getAngle().getDegrees());
   }
 
   /**
@@ -125,7 +124,7 @@ public class SwerveDrive extends Subsystem {
    * Updates the field relative position of the robot.
    */
   public void updateOdometry() {
-    m_odometry.update(getAngle(), m_frontLeft.getState(), m_frontRight.getState(), m_backLeft.getState(),
+    m_odometry.update(this.getAngle(), m_frontLeft.getState(), m_frontRight.getState(), m_backLeft.getState(),
         m_backRight.getState());
   }
 
