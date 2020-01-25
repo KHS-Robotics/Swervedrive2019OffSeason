@@ -14,7 +14,6 @@ import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.subsystems.SwerveDrive;
 
 public class Robot extends TimedRobot {
-  public final static XboxController m_controller = new XboxController(0);
   public final static SwerveDrive swerveDrive = new SwerveDrive();
   public final static AHRS navx = new AHRS();
 

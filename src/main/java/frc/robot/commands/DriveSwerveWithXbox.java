@@ -40,7 +40,7 @@ public class DriveSwerveWithXbox extends Command {
 
     // Get the x speed. We are inverting this because Xbox controllers return
     // negative values when we push forward.
-    var xSpeed = -Robot.m_controller.getY(GenericHID.Hand.kLeft) * SwerveDrive.kMaxSpeed;
+    var xSpeed = -OI.xboxController.getY(GenericHID.Hand.kLeft) * SwerveDrive.kMaxSpeed;
     if (Math.abs(xSpeed) < 0.17) {
       xSpeed = 0;
     }
@@ -48,13 +48,13 @@ public class DriveSwerveWithXbox extends Command {
     // Get the y speed or sideways/strafe speed. We are inverting this because
     // we want a positive value when we pull to the left. Xbox controllers
     // return positive values when you pull to the right by default.
-    var ySpeed = Robot.m_controller.getX(GenericHID.Hand.kLeft) * SwerveDrive.kMaxSpeed;
+    var ySpeed = OI.xboxController.getX(GenericHID.Hand.kLeft) * SwerveDrive.kMaxSpeed;
 
     // Get the rate of angular rotation. We are inverting this because we want a
     // positive value when we pull to the left (remember, CCW is positive in
     // mathematics). Xbox controllers return positive values when you pull to
     // the right by default.
-    var rot = -Robot.m_controller.getX(GenericHID.Hand.kRight) * SwerveDrive.kMaxAngularSpeed;
+    var rot = -OI.xboxController.getX(GenericHID.Hand.kRight) * SwerveDrive.kMaxAngularSpeed;
 
     Robot.swerveDrive.drive(xSpeed, ySpeed, rot, fieldRelative);
 
