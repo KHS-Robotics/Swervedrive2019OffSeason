@@ -7,6 +7,7 @@
 
 package frc.robot.subsystems;
 
+import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds;
@@ -16,11 +17,12 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.RobotMap;
+import frc.robot.commands.DriveSwerveWithXbox;
 
 /**
  * Represents a swerve drive style drivetrain.
  */
-public class SwerveDrive {
+public class SwerveDrive extends Subsystem {
   public static final double kMaxSpeed = 1.0; // 1 meters per second
   public static final double kMaxAngularSpeed = 1; // 1 radian per second
 
@@ -83,6 +85,11 @@ public class SwerveDrive {
     Robot.navx.reset();
   }
 
+  @Override
+  protected void initDefaultCommand() {
+    setDefaultCommand(new DriveSwerveWithXbox());
+  }
+
   /**
    * Returns the angle of the robot as a Rotation2d.
    *
@@ -120,5 +127,13 @@ public class SwerveDrive {
   public void updateOdometry() {
     m_odometry.update(getAngle(), m_frontLeft.getState(), m_frontRight.getState(), m_backLeft.getState(),
         m_backRight.getState());
+  }
+
+  public void stop() {
+    Robot.swerveDrive.drive(0,0,0,false);
+  }
+
+  public void resetNavx() {
+    Robot.navx.reset();
   }
 }

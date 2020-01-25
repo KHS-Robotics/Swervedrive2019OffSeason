@@ -9,16 +9,18 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.command.Subsystem;
+
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.kinematics.SwerveModuleState;
 
-public class SwerveModule {
+public class SwerveModule extends Subsystem {
   private final AnalogInput ai;
 
   private double p, i, d;
-  private static final int kEncoderResolution = 2048;
+  //private static final int kEncoderResolution = 2048;
 
   private static final double MIN_VOLTAGE = 0.2, MAX_VOLTAGE = 4.76,
       DELTA_VOLTAGE = MAX_VOLTAGE - MIN_VOLTAGE;
@@ -36,6 +38,11 @@ public class SwerveModule {
   private final PIDController m_turningPIDController;
 
   //private final PIDController m_drivePIDController = new PIDController(1 / 10.0, 0, 0);
+
+  @Override
+  protected void initDefaultCommand() {
+    setDefaultCommand(null);
+  }
 
   /**
    * Constructs a SwerveModule.

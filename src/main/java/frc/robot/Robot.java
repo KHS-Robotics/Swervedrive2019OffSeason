@@ -9,14 +9,13 @@ package frc.robot;
 
 import com.kauailabs.navx.frc.AHRS;
 
-import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.subsystems.SwerveDrive;
 
 public class Robot extends TimedRobot {
-  private final XboxController m_controller = new XboxController(0);
-  private final SwerveDrive m_swerve = new SwerveDrive();
+  public final static XboxController m_controller = new XboxController(0);
+  public final static SwerveDrive swerveDrive = new SwerveDrive();
   public final static AHRS navx = new AHRS();
 
   @Override
@@ -26,34 +25,14 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousPeriodic() {
-    driveWithJoystick(false);
-    m_swerve.updateOdometry();
+    //driveWithJoystick(false);
+    swerveDrive.updateOdometry();
   }
 
   @Override
   public void teleopPeriodic() {
-    driveWithJoystick(false);
+    //driveWithJoystick(false);
   }
 
-  private void driveWithJoystick(boolean fieldRelative) {
-    // Get the x speed. We are inverting this because Xbox controllers return
-    // negative values when we push forward.
-    var xSpeed = -m_controller.getY(GenericHID.Hand.kLeft) * SwerveDrive.kMaxSpeed;
-    if(Math.abs(xSpeed) < 0.17) {
-      xSpeed = 0;
-    }
-
-    // Get the y speed or sideways/strafe speed. We are inverting this because
-    // we want a positive value when we pull to the left. Xbox controllers
-    // return positive values when you pull to the right by default.
-    var ySpeed = m_controller.getX(GenericHID.Hand.kLeft) * SwerveDrive.kMaxSpeed;
-
-    // Get the rate of angular rotation. We are inverting this because we want a
-    // positive value when we pull to the left (remember, CCW is positive in
-    // mathematics). Xbox controllers return positive values when you pull to
-    // the right by default.
-    var rot = -m_controller.getX(GenericHID.Hand.kRight) * SwerveDrive.kMaxAngularSpeed;
-
-    m_swerve.drive(xSpeed, ySpeed, rot, fieldRelative);
-  }
+  
 }
