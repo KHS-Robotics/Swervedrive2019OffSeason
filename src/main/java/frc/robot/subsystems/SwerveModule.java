@@ -9,14 +9,14 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.kinematics.SwerveModuleState;
 
-public class SwerveModule extends Subsystem {
+public class SwerveModule extends SubsystemBase {
   private final AnalogInput ai;
 
   private double p, i, d;
@@ -40,8 +40,7 @@ public class SwerveModule extends Subsystem {
   //private final PIDController m_drivePIDController = new PIDController(1 / 10.0, 0, 0);
 
   @Override
-  protected void initDefaultCommand() {
-    setDefaultCommand(null);
+  public void periodic() {
   }
 
   /**
@@ -97,7 +96,7 @@ public class SwerveModule extends Subsystem {
    * @return The current state of the module.
    */
   public SwerveModuleState getState() {
-    return new SwerveModuleState(m_driveEncoder.getRate(), new Rotation2d(voltsToRadians(ai.getAverageVoltage())));
+    return new SwerveModuleState(m_driveEncoder.getRate(), new Rotation2d(Math.toRadians(getAngle())));
   }
 
   /**
@@ -140,5 +139,14 @@ public class SwerveModule extends Subsystem {
 
   public double degreesToVolts(double angle) {
     return ((DELTA_VOLTAGE / 360.0) * angle) + MIN_VOLTAGE;
+  }
+
+  public double getAngle() {
+    var angle = toAngle(ai.getAverageVoltage());
+    if(angle > 180) {
+      angle -= 360;
+    }
+
+    return -angle;
   }
 }

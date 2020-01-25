@@ -7,30 +7,22 @@
 
 package frc.robot.commands;
 
-import frc.robot.OI;
-import frc.robot.Robot;
+import frc.robot.RobotContainer;
 import frc.robot.subsystems.SwerveDrive;
 import edu.wpi.first.wpilibj.GenericHID;
-import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class DriveSwerveWithXbox extends CommandBase {
   private boolean fieldRelative = false;
 
   public DriveSwerveWithXbox() {
-    this.addRequirements(Robot.swerveDrive);
+    this.addRequirements(RobotContainer.swerveDrive);
   }
 
   // Called just before this Command runs the first time
   @Override
   public void initialize() {
-    Robot.swerveDrive.stop();
-    SmartDashboard.putNumber("x", 0);
-    SmartDashboard.putNumber("y", 0);
-    SmartDashboard.putNumber("z", 0);
-
-    SmartDashboard.putBoolean("wadwad", true);
+    RobotContainer.swerveDrive.stop();
   }
 
   // Called repeatedly when this Command is scheduled to run
@@ -39,7 +31,7 @@ public class DriveSwerveWithXbox extends CommandBase {
 
     // Get the x speed. We are inverting this because Xbox controllers return
     // negative values when we push forward.
-    var xSpeed = -OI.xboxController.getY(GenericHID.Hand.kLeft) * SwerveDrive.kMaxSpeed;
+    var xSpeed = -RobotContainer.xboxController.getY(GenericHID.Hand.kLeft) * SwerveDrive.kMaxSpeed;
     if (Math.abs(xSpeed) < 0.17) {
       xSpeed = 0;
     }
@@ -47,19 +39,19 @@ public class DriveSwerveWithXbox extends CommandBase {
     // Get the y speed or sideways/strafe speed. We are inverting this because
     // we want a positive value when we pull to the left. Xbox controllers
     // return positive values when you pull to the right by default.
-    var ySpeed = OI.xboxController.getX(GenericHID.Hand.kLeft) * SwerveDrive.kMaxSpeed;
+    var ySpeed = RobotContainer.xboxController.getX(GenericHID.Hand.kLeft) * SwerveDrive.kMaxSpeed;
 
     // Get the rate of angular rotation. We are inverting this because we want a
     // positive value when we pull to the left (remember, CCW is positive in
     // mathematics). Xbox controllers return positive values when you pull to
     // the right by default.
-    var rot = -OI.xboxController.getX(GenericHID.Hand.kRight) * SwerveDrive.kMaxAngularSpeed;
+    var rot = -RobotContainer.xboxController.getX(GenericHID.Hand.kRight) * SwerveDrive.kMaxAngularSpeed;
 
-    fieldRelative = (!OI.xboxController.getBumper(Hand.kLeft));
-    Robot.swerveDrive.drive(xSpeed, ySpeed, rot, fieldRelative);
+    //fieldRelative = (!RobotContainer.xboxController.getBumper(Hand.kLeft));
+    RobotContainer.swerveDrive.drive(xSpeed, ySpeed, rot, fieldRelative);
 
-    if (OI.xboxController.getStartButton()) {
-      Robot.swerveDrive.resetNavx();
+    if (RobotContainer.xboxController.getStartButton()) {
+      RobotContainer.swerveDrive.resetNavx();
     }
 
     /*
@@ -77,7 +69,6 @@ public class DriveSwerveWithXbox extends CommandBase {
   // Called once after isFinished returns true
   @Override
   public void end(boolean interrupted) {
-    SmartDashboard.putBoolean("wadwad", false);
-    Robot.swerveDrive.stop();
+    RobotContainer.swerveDrive.stop();
   }
 }

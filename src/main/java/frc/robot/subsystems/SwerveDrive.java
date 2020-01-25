@@ -15,7 +15,7 @@ import edu.wpi.first.wpilibj.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.wpilibj.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
-import frc.robot.Robot;
+import frc.robot.RobotContainer;
 import frc.robot.RobotMap;
 
 /**
@@ -81,7 +81,7 @@ public class SwerveDrive extends SubsystemBase {
   private final SwerveDriveOdometry m_odometry = new SwerveDriveOdometry(m_kinematics, this.getAngle());
 
   public SwerveDrive() {
-    Robot.navx.reset();
+    RobotContainer.navx.reset();
   }
 
   @Override
@@ -96,7 +96,7 @@ public class SwerveDrive extends SubsystemBase {
    */
   public Rotation2d getAngle() {
     // Negating the angle because WPILib gyros are CW positive.
-    return Rotation2d.fromDegrees(-Robot.navx.getAngle());
+    return Rotation2d.fromDegrees(-RobotContainer.navx.getAngle());
   }
 
   /**
@@ -118,6 +118,11 @@ public class SwerveDrive extends SubsystemBase {
     SmartDashboard.putNumber("FR Angle", m_frontRight.setDesiredState(swerveModuleStates[1]));
     SmartDashboard.putNumber("RL Angle", m_backLeft.setDesiredState(swerveModuleStates[2]));
     SmartDashboard.putNumber("RR Angle", m_backRight.setDesiredState(swerveModuleStates[3]));
+
+    System.out.println("FL Angle: " + swerveModuleStates[0].angle.getDegrees());
+    System.out.println("FR Angle: " + swerveModuleStates[1].angle.getDegrees());
+    System.out.println("RL Angle: " + swerveModuleStates[2].angle.getDegrees());
+    System.out.println("RR Angle: " + swerveModuleStates[3].angle.getDegrees());
   }
 
   /**
@@ -129,10 +134,10 @@ public class SwerveDrive extends SubsystemBase {
   }
 
   public void stop() {
-    Robot.swerveDrive.drive(0,0,0,false);
+    RobotContainer.swerveDrive.drive(0,0,0,false);
   }
 
   public void resetNavx() {
-    Robot.navx.reset();
+    RobotContainer.navx.reset();
   }
 }
