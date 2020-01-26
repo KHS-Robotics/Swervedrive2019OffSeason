@@ -10,6 +10,7 @@ package frc.robot.commands;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.SwerveDrive;
 import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class DriveSwerveWithXbox extends CommandBase {
@@ -39,7 +40,7 @@ public class DriveSwerveWithXbox extends CommandBase {
     // Get the y speed or sideways/strafe speed. We are inverting this because
     // we want a positive value when we pull to the left. Xbox controllers
     // return positive values when you pull to the right by default.
-    var ySpeed = RobotContainer.xboxController.getX(GenericHID.Hand.kLeft) * SwerveDrive.kMaxSpeed;
+    var ySpeed = -RobotContainer.xboxController.getX(GenericHID.Hand.kLeft) * SwerveDrive.kMaxSpeed;
 
     // Get the rate of angular rotation. We are inverting this because we want a
     // positive value when we pull to the left (remember, CCW is positive in
@@ -47,7 +48,7 @@ public class DriveSwerveWithXbox extends CommandBase {
     // the right by default.
     var rot = -RobotContainer.xboxController.getX(GenericHID.Hand.kRight) * SwerveDrive.kMaxAngularSpeed;
 
-    //fieldRelative = (!RobotContainer.xboxController.getBumper(Hand.kLeft));
+    fieldRelative = (!RobotContainer.xboxController.getBumper(Hand.kLeft));
     RobotContainer.swerveDrive.drive(xSpeed, ySpeed, rot, fieldRelative);
 
     if (RobotContainer.xboxController.getStartButton()) {

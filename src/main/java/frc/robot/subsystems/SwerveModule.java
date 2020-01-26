@@ -112,17 +112,13 @@ public class SwerveModule extends SubsystemBase {
     // final var driveOutput =
     // m_drivePIDController.calculate(m_driveEncoder.getRate(),
     // state.speedMetersPerSecond);
-    double dAngle = Math.abs(toAngle(ai.getAverageVoltage()) - state.angle.getDegrees());
-    boolean isFlipped = dAngle >= 90 && dAngle <= 270;
 
     // Calculate the turning motor output from the turning PID controller.
-    double targetAngle = state.angle.getDegrees();
-    if (targetAngle < 0) {
-      targetAngle = -targetAngle;
-    } else if (targetAngle > 0) {
-      targetAngle = -targetAngle;
-      targetAngle += 360;
-    }
+    double targetAngle = to360(state.angle.getDegrees());
+    double dAngle = Math.abs(toAngle(ai.getAverageVoltage()) - targetAngle);
+    
+    boolean isFlipped = dAngle >= 90 && dAngle <= 270;
+
 
     final var turnOutput = m_turningPIDController.calculate(ai.getAverageVoltage(),
         degreesToVolts((targetAngle + (isFlipped ? 180.0 : 0)) % 360.0));
@@ -162,5 +158,15 @@ public class SwerveModule extends SubsystemBase {
     }
 
     return -angle;
+  }
+
+  private double to360(double angle) {
+    if (angle < 0) {
+      angle = -angle;
+    } else if (angle > 0) {
+      angle = -angle;
+      angle += 360;
+    }
+    return angle;
   }
 }
