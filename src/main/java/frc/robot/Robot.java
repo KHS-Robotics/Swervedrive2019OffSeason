@@ -33,6 +33,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopPeriodic() {
+    Limelight.setLedMode(LightMode.eOff);
     //driveWithJoystick(false);
   }
  

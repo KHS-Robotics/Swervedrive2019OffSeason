@@ -38,7 +38,8 @@ public class SwerveDrive extends SubsystemBase {
     Constants.FRONT_LEFT_I, 
     Constants.FRONT_LEFT_D,
     RobotMap.FRONT_LEFT_DRIVE_ENC_A, 
-    RobotMap.FRONT_LEFT_DRIVE_ENC_B
+    RobotMap.FRONT_LEFT_DRIVE_ENC_B,
+    true
   );
   private final SwerveModule m_frontRight = new SwerveModule(
     RobotMap.FRONT_RIGHT_DRIVE,
@@ -48,8 +49,7 @@ public class SwerveDrive extends SubsystemBase {
     Constants.FRONT_RIGHT_I, 
     Constants.FRONT_RIGHT_D,
     RobotMap.FRONT_RIGHT_DRIVE_ENC_A, 
-    RobotMap.FRONT_RIGHT_DRIVE_ENC_B,
-    true
+    RobotMap.FRONT_RIGHT_DRIVE_ENC_B
   );
   private final SwerveModule m_backLeft = new SwerveModule(
     RobotMap.REAR_LEFT_DRIVE, 
@@ -59,7 +59,8 @@ public class SwerveDrive extends SubsystemBase {
     Constants.REAR_LEFT_I, 
     Constants.REAR_LEFT_D,
     RobotMap.REAR_LEFT_DRIVE_ENC_A, 
-    RobotMap.REAR_LEFT_DRIVE_ENC_B
+    RobotMap.REAR_LEFT_DRIVE_ENC_B,
+    true
   );
   private final SwerveModule m_backRight = new SwerveModule(
     RobotMap.REAR_RIGHT_DRIVE, 
@@ -69,8 +70,7 @@ public class SwerveDrive extends SubsystemBase {
     Constants.REAR_RIGHT_I, 
     Constants.REAR_RIGHT_D,
     RobotMap.REAR_RIGHT_DRIVE_ENC_A, 
-    RobotMap.REAR_RIGHT_DRIVE_ENC_B,
-    true
+    RobotMap.REAR_RIGHT_DRIVE_ENC_B
   );
 
   // private final AnalogGyro m_gyro = new AnalogGyro(0);
