@@ -20,12 +20,13 @@ public class SwerveModule extends SubsystemBase {
   private final AnalogInput ai;
 
   private double p, i, d;
-  //private static final int kEncoderResolution = 2048;
+  // private static final int kEncoderResolution = 2048;
 
-  private static final double MIN_VOLTAGE = 0.2, MAX_VOLTAGE = 4.76,
-      DELTA_VOLTAGE = MAX_VOLTAGE - MIN_VOLTAGE;
-      //distancePerPulse = (0.0254 * 4 * Math.PI * 12 * 19) / (kEncoderResolution * 32 * 60);
-      //kModuleMaxAngularVelocity = SwerveDrive.kMaxAngularSpeed, kModuleMaxAngularAcceleration = 2 * Math.PI; // radians per second squared;
+  private static final double MIN_VOLTAGE = 0.2, MAX_VOLTAGE = 4.76, DELTA_VOLTAGE = MAX_VOLTAGE - MIN_VOLTAGE;
+  // distancePerPulse = (0.0254 * 4 * Math.PI * 12 * 19) / (kEncoderResolution *
+  // 32 * 60);
+  // kModuleMaxAngularVelocity = SwerveDrive.kMaxAngularSpeed,
+  // kModuleMaxAngularAcceleration = 2 * Math.PI; // radians per second squared;
 
   private double offset;
   private boolean isInverted;
@@ -37,7 +38,8 @@ public class SwerveModule extends SubsystemBase {
 
   private final PIDController m_turningPIDController;
 
-  //private final PIDController m_drivePIDController = new PIDController(1 / 10.0, 0, 0);
+  // private final PIDController m_drivePIDController = new PIDController(1 /
+  // 10.0, 0, 0);
 
   @Override
   public void periodic() {
@@ -74,7 +76,7 @@ public class SwerveModule extends SubsystemBase {
     // Set the distance per pulse for the drive encoder. We can simply use the
     // distance traveled for one rotation of the wheel divided by the encoder
     // resolution.
-    //m_driveEncoder.setDistancePerPulse(distancePerPulse);
+    // m_driveEncoder.setDistancePerPulse(distancePerPulse);
 
     // // Set the distance (in this case, angle) per pulse for the turning encoder.
     // // This is the the angle through an entire rotation (2 * wpi::math::pi)
@@ -86,7 +88,8 @@ public class SwerveModule extends SubsystemBase {
     m_turningPIDController.enableContinuousInput(MIN_VOLTAGE, MAX_VOLTAGE);
   }
 
-  public SwerveModule(int driveMotorChannel, int turningMotorChannel, int aiPort, double pVal, double iVal, double dVal, int encA, int encB) {
+  public SwerveModule(int driveMotorChannel, int turningMotorChannel, int aiPort, double pVal, double iVal, double dVal,
+      int encA, int encB) {
     this(driveMotorChannel, turningMotorChannel, aiPort, pVal, iVal, dVal, encA, encB, false);
   }
 
@@ -106,26 +109,31 @@ public class SwerveModule extends SubsystemBase {
    */
   public double setDesiredState(SwerveModuleState state) {
     // Calculate the drive output from the drive PID controller.
-    //final var driveOutput = m_drivePIDController.calculate(m_driveEncoder.getRate(), state.speedMetersPerSecond);
+    // final var driveOutput =
+    // m_drivePIDController.calculate(m_driveEncoder.getRate(),
+    // state.speedMetersPerSecond);
     double dAngle = Math.abs(toAngle(ai.getAverageVoltage()) - state.angle.getDegrees());
     boolean isFlipped = dAngle >= 90 && dAngle <= 270;
 
     // Calculate the turning motor output from the turning PID controller.
     double targetAngle = state.angle.getDegrees();
-    if(targetAngle > 0) {
+    if (targetAngle < 0) {
+      targetAngle = -targetAngle;
+    } else if (targetAngle > 0) {
       targetAngle = -targetAngle;
       targetAngle += 360;
     }
 
-    final var turnOutput = m_turningPIDController.calculate(ai.getAverageVoltage(), degreesToVolts((targetAngle + (isFlipped ? 180.0 : 0)) % 360.0));
+    final var turnOutput = m_turningPIDController.calculate(ai.getAverageVoltage(),
+        degreesToVolts((targetAngle + (isFlipped ? 180.0 : 0)) % 360.0));
 
     // Calculate the turning motor output from the turning PID controller.
     double driveCalculation = state.speedMetersPerSecond;
 
-    if(isFlipped) {
+    if (isFlipped) {
       driveCalculation = -driveCalculation;
     }
-    if(isInverted) {
+    if (isInverted) {
       driveCalculation = -driveCalculation;
     }
 
@@ -149,7 +157,7 @@ public class SwerveModule extends SubsystemBase {
 
   public double getAngle() {
     var angle = toAngle(ai.getAverageVoltage());
-    if(angle > 180) {
+    if (angle > 180) {
       angle -= 360;
     }
 
