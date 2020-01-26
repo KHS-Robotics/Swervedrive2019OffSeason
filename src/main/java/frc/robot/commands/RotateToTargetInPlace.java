@@ -10,13 +10,13 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.RobotContainer;
 
-public class RotateToAngleInPlace extends CommandBase {
+public class RotateToTargetInPlace extends CommandBase {
   protected double angle;
 
   /**
    * Creates a new RotateToAngleInPlace.
    */
-  public RotateToAngleInPlace(double angle) {
+  public RotateToTargetInPlace(double angle) {
     this.angle = angle;
     this.addRequirements(RobotContainer.swerveDrive);
   }
