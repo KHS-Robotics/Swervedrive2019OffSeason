@@ -15,6 +15,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 
 public class SwerveModule extends SubsystemBase {
   private final AnalogInput ai;
@@ -28,6 +29,7 @@ public class SwerveModule extends SubsystemBase {
   // kModuleMaxAngularVelocity = SwerveDrive.kMaxAngularSpeed,
   // kModuleMaxAngularAcceleration = 2 * Math.PI; // radians per second squared;
 
+  private String name;
   private double offset;
   private boolean isInverted;
 
@@ -58,8 +60,9 @@ public class SwerveModule extends SubsystemBase {
    * @param encB                Port of Encoder B Channel
    * @param offset              Offset of the Pivot Motor, 0 by default
    */
-  public SwerveModule(int driveMotorChannel, int turningMotorChannel, int aiPort, double turnP, double turnI,
+  public SwerveModule(String name, int driveMotorChannel, int turningMotorChannel, int aiPort, double turnP, double turnI,
       double turnD, int encA, int encB, boolean reversed) {
+    this.name = name;
     isInverted = reversed;
 
     ai = new AnalogInput(aiPort);
@@ -86,11 +89,15 @@ public class SwerveModule extends SubsystemBase {
     // Limit the PID Controller's input range between -pi and pi and set the input
     // to be continuous.
     m_turningPIDController.enableContinuousInput(MIN_VOLTAGE, MAX_VOLTAGE);
+
+    var tab = Shuffleboard.getTab(name + " Module");
+    tab.addNumber("Angle", this::getAngle);
+    tab.addNumber("Speed", () -> (isInverted ? -1 : 1) * getState().speedMetersPerSecond);
   }
 
-  public SwerveModule(int driveMotorChannel, int turningMotorChannel, int aiPort, double pVal, double iVal, double dVal,
+  public SwerveModule(String name, int driveMotorChannel, int turningMotorChannel, int aiPort, double pVal, double iVal, double dVal,
       int encA, int encB) {
-    this(driveMotorChannel, turningMotorChannel, aiPort, pVal, iVal, dVal, encA, encB, false);
+    this(name, driveMotorChannel, turningMotorChannel, aiPort, pVal, iVal, dVal, encA, encB, false);
   }
 
   /**

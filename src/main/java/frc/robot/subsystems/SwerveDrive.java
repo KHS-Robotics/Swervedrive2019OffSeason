@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.wpilibj.kinematics.SwerveDriveOdometry;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
@@ -31,6 +32,7 @@ public class SwerveDrive extends SubsystemBase {
   private final Translation2d m_backRightLocation = new Translation2d(-0.2667, -0.327025);
 
   private final SwerveModule m_frontLeft = new SwerveModule(
+    "FL",
     RobotMap.FRONT_LEFT_DRIVE, 
     RobotMap.FRONT_LEFT_PIVOT,
     RobotMap.FRONT_LEFT_ANALOG, 
@@ -41,6 +43,7 @@ public class SwerveDrive extends SubsystemBase {
     RobotMap.FRONT_LEFT_DRIVE_ENC_B
   );
   private final SwerveModule m_frontRight = new SwerveModule(
+    "FR",
     RobotMap.FRONT_RIGHT_DRIVE,
     RobotMap.FRONT_RIGHT_PIVOT,
     RobotMap.FRONT_RIGHT_ANALOG, 
@@ -52,6 +55,7 @@ public class SwerveDrive extends SubsystemBase {
     true
   );
   private final SwerveModule m_backLeft = new SwerveModule(
+    "RL",
     RobotMap.REAR_LEFT_DRIVE, 
     RobotMap.REAR_LEFT_PIVOT,
     RobotMap.REAR_LEFT_ANALOG, 
@@ -62,6 +66,7 @@ public class SwerveDrive extends SubsystemBase {
     RobotMap.REAR_LEFT_DRIVE_ENC_B
   );
   private final SwerveModule m_backRight = new SwerveModule(
+    "RR",
     RobotMap.REAR_RIGHT_DRIVE, 
     RobotMap.REAR_RIGHT_PIVOT,
     RobotMap.REAR_RIGHT_ANALOG, 
@@ -82,6 +87,8 @@ public class SwerveDrive extends SubsystemBase {
 
   public SwerveDrive() {
     RobotContainer.navx.reset();
+    var tab = Shuffleboard.getTab("Swerve Drive");
+    tab.addNumber("Angle", () -> -RobotContainer.navx.getYaw());
   }
 
   @Override
