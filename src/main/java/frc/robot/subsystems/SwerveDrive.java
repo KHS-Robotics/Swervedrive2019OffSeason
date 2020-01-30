@@ -121,15 +121,15 @@ public class SwerveDrive extends SubsystemBase {
       .toSwerveModuleStates(fieldRelative ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, getAngle())
         : new ChassisSpeeds(xSpeed, ySpeed, rot));
     SwerveDriveKinematics.normalizeWheelSpeeds(swerveModuleStates, kMaxSpeed);
-    SmartDashboard.putNumber("FL Angle", m_frontLeft.setDesiredState(swerveModuleStates[0]));
-    SmartDashboard.putNumber("FR Angle", m_frontRight.setDesiredState(swerveModuleStates[1]));
-    SmartDashboard.putNumber("RL Angle", m_backLeft.setDesiredState(swerveModuleStates[2]));
-    SmartDashboard.putNumber("RR Angle", m_backRight.setDesiredState(swerveModuleStates[3]));
+    m_frontLeft.setDesiredState(swerveModuleStates[0]);
+    m_frontRight.setDesiredState(swerveModuleStates[1]);
+    m_backLeft.setDesiredState(swerveModuleStates[2]);
+    m_backRight.setDesiredState(swerveModuleStates[3]);
 
-    System.out.println("FL Angle: " + swerveModuleStates[0].angle.getDegrees());
-    System.out.println("FR Angle: " + swerveModuleStates[1].angle.getDegrees());
-    System.out.println("RL Angle: " + swerveModuleStates[2].angle.getDegrees());
-    System.out.println("RR Angle: " + swerveModuleStates[3].angle.getDegrees());
+    // System.out.println("FL Angle: " + swerveModuleStates[0].angle.getDegrees());
+    // System.out.println("FR Angle: " + swerveModuleStates[1].angle.getDegrees());
+    // System.out.println("RL Angle: " + swerveModuleStates[2].angle.getDegrees());
+    // System.out.println("RR Angle: " + swerveModuleStates[3].angle.getDegrees());
   }
 
   /**

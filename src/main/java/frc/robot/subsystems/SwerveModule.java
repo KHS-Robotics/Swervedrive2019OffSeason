@@ -93,6 +93,10 @@ public class SwerveModule extends SubsystemBase {
     var tab = Shuffleboard.getTab(name + " Module");
     tab.addNumber("Angle", this::getAngle);
     tab.addNumber("Speed", () -> (isInverted ? -1 : 1) * getState().speedMetersPerSecond);
+    tab.addNumber("Target Angle", m_turningPIDController::getSetpoint);
+    tab.addNumber("Target Error", m_turningPIDController::getPositionError);
+    tab.addBoolean("At Setpoint", m_turningPIDController::atSetpoint);
+    tab.addBoolean("Is Flipped", () -> this.isInverted);
   }
 
   public SwerveModule(String name, int driveMotorChannel, int turningMotorChannel, int aiPort, double pVal, double iVal, double dVal,
