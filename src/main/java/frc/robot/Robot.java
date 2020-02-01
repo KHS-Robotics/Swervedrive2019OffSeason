@@ -11,13 +11,15 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Limelight.LightMode;
 import frc.robot.commands.DriveSwerveWithXbox;
+import frc.robot.RobotContainer;
 
 public class Robot extends TimedRobot {
+  public static RobotContainer container;
 
   @Override
   public void robotInit() {
+    container = new RobotContainer();
     RobotContainer.swerveDrive.setDefaultCommand(new DriveSwerveWithXbox());
-    Limelight.setLedMode(LightMode.eOff);
   }
 
   @Override
@@ -34,7 +36,16 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     Limelight.setLedMode(LightMode.eOff);
-    //driveWithJoystick(false);
   }
- 
+
+  @Override
+  public void disabledInit() {
+    Limelight.setLedMode(LightMode.eOff);
+  }
+
+  @Override
+  public void disabledPeriodic() {
+    Limelight.setLedMode(LightMode.eOff);
+  }
+
 }

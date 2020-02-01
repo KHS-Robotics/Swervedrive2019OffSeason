@@ -8,6 +8,8 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpiutil.math.MathUtil;
+import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds;
@@ -30,6 +32,8 @@ public class SwerveDrive extends SubsystemBase {
   private final Translation2d m_frontRightLocation = new Translation2d(0.2667, -0.327025);
   private final Translation2d m_backLeftLocation = new Translation2d(-0.2667, 0.327025);
   private final Translation2d m_backRightLocation = new Translation2d(-0.2667, -0.327025);
+
+  private PIDController targetPid;
 
   private final SwerveModule m_frontLeft = new SwerveModule(
     "FL",
@@ -89,6 +93,10 @@ public class SwerveDrive extends SubsystemBase {
     RobotContainer.navx.reset();
     var tab = Shuffleboard.getTab("Swerve Drive");
     tab.addNumber("Angle", () -> -RobotContainer.navx.getYaw());
+
+    targetPid = new PIDController(Constants.TARGET_P, Constants.TARGET_I, Constants.TARGET_D);
+    targetPid.enableContinuousInput(-180.0, 180.0);
+    targetPid.setTolerance(2);
   }
 
   @Override
@@ -140,11 +148,36 @@ public class SwerveDrive extends SubsystemBase {
         m_backRight.getState());
   }
 
+  public void rotateToAngleInPlace(double setAngle) {
+    holdAngleWhileDriving(0, 0, setAngle, false);
+  }
+
+  public void holdAngleWhileDriving(double x, double y, double setAngle, boolean fod) {
+    var rotateOutput = targetPid.calculate(-RobotContainer.navx.getYaw(), normalizeAngle(setAngle)) * kMaxAngularSpeed;
+    this.drive(x, y, MathUtil.clamp(rotateOutput, -1, 1), fod);
+  }
+
   public void stop() {
     RobotContainer.swerveDrive.drive(0,0,0,false);
   }
 
   public void resetNavx() {
     RobotContainer.navx.reset();
+  }
+
+  private static double normalizeAngle(double angle) {
+    if(angle > 0) {
+      angle %= 360;
+      if(angle > 180) {
+        angle -= 360;
+      }
+    }
+    else if(angle < 0) {
+      angle %= -360;
+      if(angle < -180) {
+        angle += 360;
+      }
+    }
+    return angle;
   }
 }

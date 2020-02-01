@@ -33,7 +33,7 @@ public class DriveSwerveWithXbox extends CommandBase {
     // Get the x speed. We are inverting this because Xbox controllers return
     // negative values when we push forward.
     var xSpeed = -RobotContainer.xboxController.getY(GenericHID.Hand.kLeft) * SwerveDrive.kMaxSpeed;
-    if (Math.abs(xSpeed) < 0.17) {
+    if (Math.abs(xSpeed) < 0.1) {
       xSpeed = 0;
     }
 
