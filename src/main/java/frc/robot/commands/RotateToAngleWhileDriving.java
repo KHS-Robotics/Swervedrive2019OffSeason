@@ -14,6 +14,7 @@ import frc.robot.subsystems.SwerveDrive;
 
 public class RotateToAngleWhileDriving extends CommandBase {
   private double angle;
+  private boolean isFieldOriented;
   /**
    * Creates a new RotateToAngle.
    */
@@ -37,8 +38,10 @@ public class RotateToAngleWhileDriving extends CommandBase {
     }
 
     var ySpeed = -RobotContainer.xboxController.getX(Hand.kLeft) * SwerveDrive.kMaxSpeed;
+    
+    isFieldOriented = (!RobotContainer.xboxController.getBumper(Hand.kLeft));
 
-    RobotContainer.swerveDrive.holdAngleWhileDriving(xSpeed, ySpeed, angle, false);
+    RobotContainer.swerveDrive.holdAngleWhileDriving(xSpeed, ySpeed, angle, isFieldOriented);
   }
 
   // Called once the command ends or is interrupted.

@@ -32,7 +32,7 @@ public class RobotContainer {
 
   public static DriveSwerveWithXbox driveSwerveWithXbox = new DriveSwerveWithXbox();
   private RotateToAngleWhileDriving rotateToAngleWhileDriving = new RotateToAngleWhileDriving(90);
-  private HoldAngle holdAngleWhileDriving = new HoldAngle();
+  public static HoldAngle holdAngleWhileDriving = new HoldAngle();
 
   JoystickButton rotateToAngle, holdAngle;
 

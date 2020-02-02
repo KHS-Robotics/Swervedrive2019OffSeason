@@ -14,6 +14,7 @@ import frc.robot.subsystems.SwerveDrive;
 
 public class HoldAngle extends CommandBase {
   private double angle;
+  private boolean isFieldOriented;
   /**
    * Creates a new RotateToAngle.
    */
@@ -24,7 +25,6 @@ public class HoldAngle extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    System.out.println("Init");
     angle = -RobotContainer.navx.getYaw();
   }
 
@@ -32,13 +32,11 @@ public class HoldAngle extends CommandBase {
   @Override
   public void execute() {
     var xSpeed = -RobotContainer.xboxController.getY(Hand.kLeft) * SwerveDrive.kMaxSpeed;
-    if (Math.abs(xSpeed) < 0.17) {
-      xSpeed = 0;
-    }
-
     var ySpeed = -RobotContainer.xboxController.getX(Hand.kLeft) * SwerveDrive.kMaxSpeed;
 
-    RobotContainer.swerveDrive.holdAngleWhileDriving(xSpeed, ySpeed, angle, false);
+    isFieldOriented = (!RobotContainer.xboxController.getBumper(Hand.kLeft));
+
+    RobotContainer.swerveDrive.holdAngleWhileDriving(xSpeed, ySpeed, angle, isFieldOriented);
   }
 
   // Called once the command ends or is interrupted.
@@ -49,6 +47,6 @@ public class HoldAngle extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-	return false;
+	return Math.abs(RobotContainer.xboxController.getX(Hand.kRight)) > 0.05;
   }
 }

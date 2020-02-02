@@ -33,9 +33,6 @@ public class DriveSwerveWithXbox extends CommandBase {
     // Get the x speed. We are inverting this because Xbox controllers return
     // negative values when we push forward.
     var xSpeed = -RobotContainer.xboxController.getY(GenericHID.Hand.kLeft) * SwerveDrive.kMaxSpeed;
-    if (Math.abs(xSpeed) < 0.1) {
-      xSpeed = 0;
-    }
 
     // Get the y speed or sideways/strafe speed. We are inverting this because
     // we want a positive value when we pull to the left. Xbox controllers
@@ -48,12 +45,16 @@ public class DriveSwerveWithXbox extends CommandBase {
     // the right by default.
     var rot = -RobotContainer.xboxController.getX(GenericHID.Hand.kRight) * SwerveDrive.kMaxAngularSpeed;
 
-    fieldRelative = (!RobotContainer.xboxController.getBumper(Hand.kLeft));
-    RobotContainer.swerveDrive.drive(xSpeed, ySpeed, rot, fieldRelative);
-
     if (RobotContainer.xboxController.getStartButton()) {
       RobotContainer.swerveDrive.resetNavx();
     }
+
+    // if(Math.abs(RobotContainer.xboxController.getX(Hand.kRight)) < 0.05) {
+    //   RobotContainer.holdAngleWhileDriving.schedule();
+    // }
+
+    fieldRelative = (!RobotContainer.xboxController.getBumper(Hand.kLeft));
+    RobotContainer.swerveDrive.drive(xSpeed, ySpeed, rot, fieldRelative);    
 
     /*
      * if (Math.abs(x) + Math.abs(y) + Math.abs(z) > 0.35) {
