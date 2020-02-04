@@ -10,7 +10,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Limelight.LightMode;
-import frc.robot.commands.DriveSwerveWithXbox;
+import frc.robot.commands.HoldAngle;
 import frc.robot.RobotContainer;
 
 public class Robot extends TimedRobot {
@@ -19,7 +19,7 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
     container = new RobotContainer();
-    RobotContainer.swerveDrive.setDefaultCommand(new DriveSwerveWithXbox());
+    RobotContainer.swerveDrive.setDefaultCommand(new HoldAngle());
   }
 
   @Override

@@ -11,6 +11,7 @@ import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.DriveSwerveWithXbox;
@@ -32,9 +33,10 @@ public class RobotContainer {
 
   public static DriveSwerveWithXbox driveSwerveWithXbox = new DriveSwerveWithXbox();
   private RotateToAngleWhileDriving rotateToAngleWhileDriving = new RotateToAngleWhileDriving(90);
-  public static HoldAngle holdAngleWhileDriving = new HoldAngle();
+  public static HoldAngle holdAngle = new HoldAngle();
 
-  JoystickButton rotateToAngle, holdAngle;
+  JoystickButton rotateToAngle;
+  CustomButton turnAndDrive;
 
   // The robot's subsystems and commands are defined here...
 
@@ -55,8 +57,8 @@ public class RobotContainer {
     rotateToAngle = new JoystickButton(xboxController, XboxController.Button.kY.value);
     rotateToAngle.whenHeld(rotateToAngleWhileDriving);
 
-    holdAngle = new JoystickButton(xboxController, XboxController.Button.kA.value);
-    holdAngle.whenHeld(holdAngleWhileDriving);
+    turnAndDrive = new CustomButton( () -> Math.abs(xboxController.getX(Hand.kLeft)) > 0.05 );
+    turnAndDrive.whenHeld(holdAngle);
   }
 
   /**
