@@ -8,6 +8,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.GenericHID.Hand;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.SwerveDrive;
@@ -26,6 +27,7 @@ public class HoldAngle extends CommandBase {
   @Override
   public void initialize() {
     angle = -RobotContainer.navx.getYaw();
+    SmartDashboard.putBoolean("Holding Angle", true);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -42,11 +44,12 @@ public class HoldAngle extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    SmartDashboard.putBoolean("Holding Angle", false);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-	return Math.abs(RobotContainer.xboxController.getX(Hand.kRight)) > 0.05;
+	return false;
   }
 }

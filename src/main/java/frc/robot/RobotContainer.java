@@ -57,8 +57,8 @@ public class RobotContainer {
     rotateToAngle = new JoystickButton(xboxController, XboxController.Button.kY.value);
     rotateToAngle.whenHeld(rotateToAngleWhileDriving);
 
-    turnAndDrive = new CustomButton( () -> Math.abs(xboxController.getX(Hand.kLeft)) > 0.05 );
-    turnAndDrive.whenHeld(holdAngle);
+    turnAndDrive = new CustomButton( () -> Math.abs(xboxController.getX(Hand.kRight)) > 0.05 );
+    turnAndDrive.whenHeld(driveSwerveWithXbox);
   }
 
   /**
