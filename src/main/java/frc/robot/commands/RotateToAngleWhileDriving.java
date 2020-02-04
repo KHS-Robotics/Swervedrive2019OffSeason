@@ -26,16 +26,13 @@ public class RotateToAngleWhileDriving extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    System.out.println("Init");
+    RobotContainer.swerveDrive.resetPid();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
     var xSpeed = -RobotContainer.xboxController.getY(Hand.kLeft) * SwerveDrive.kMaxSpeed;
-    if (Math.abs(xSpeed) < 0.17) {
-      xSpeed = 0;
-    }
 
     var ySpeed = -RobotContainer.xboxController.getX(Hand.kLeft) * SwerveDrive.kMaxSpeed;
     

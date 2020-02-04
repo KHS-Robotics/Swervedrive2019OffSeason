@@ -26,6 +26,7 @@ public class HoldAngle extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    RobotContainer.swerveDrive.resetPid();
     angle = -RobotContainer.navx.getYaw();
     SmartDashboard.putBoolean("Holding Angle", true);
   }

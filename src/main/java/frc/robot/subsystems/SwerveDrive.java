@@ -159,10 +159,16 @@ public class SwerveDrive extends SubsystemBase {
 
   public void stop() {
     RobotContainer.swerveDrive.drive(0,0,0,false);
+    targetPid.reset();
   }
 
   public void resetNavx() {
+    targetPid.reset();
     RobotContainer.navx.reset();
+  }
+
+  public void resetPid() {
+    targetPid.reset();
   }
 
   private static double normalizeAngle(double angle) {

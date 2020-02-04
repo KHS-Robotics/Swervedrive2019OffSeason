@@ -23,7 +23,6 @@ public class DriveSwerveWithXbox extends CommandBase {
   // Called just before this Command runs the first time
   @Override
   public void initialize() {
-    RobotContainer.swerveDrive.stop();
   }
 
   // Called repeatedly when this Command is scheduled to run
@@ -44,10 +43,6 @@ public class DriveSwerveWithXbox extends CommandBase {
     // mathematics). Xbox controllers return positive values when you pull to
     // the right by default.
     var rot = -RobotContainer.xboxController.getX(GenericHID.Hand.kRight) * SwerveDrive.kMaxAngularSpeed;
-
-    if (RobotContainer.xboxController.getStartButton()) {
-      RobotContainer.swerveDrive.resetNavx();
-    }
 
     // if(Math.abs(RobotContainer.xboxController.getX(Hand.kRight)) < 0.05) {
     //   RobotContainer.holdAngleWhileDriving.schedule();
@@ -71,6 +66,5 @@ public class DriveSwerveWithXbox extends CommandBase {
   // Called once after isFinished returns true
   @Override
   public void end(boolean interrupted) {
-    RobotContainer.swerveDrive.stop();
   }
 }
