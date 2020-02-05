@@ -21,8 +21,8 @@ public class Constants {
   public static final double FRONT_LEFT_D = 0.09;
   
   public static final double FRONT_RIGHT_P = 2.0;
-  public static final double FRONT_RIGHT_D = 0.005;
-  public static final double FRONT_RIGHT_I = 0.09;
+  public static final double FRONT_RIGHT_I = 0.005;
+  public static final double FRONT_RIGHT_D = 0.09;
 
   public static final double REAR_LEFT_P = 2.0;
   public static final double REAR_LEFT_I = 0.005;
