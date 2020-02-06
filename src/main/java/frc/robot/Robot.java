@@ -18,6 +18,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void robotInit() {
+    Limelight.setLedMode(LightMode.eOff);
     container = new RobotContainer();
     RobotContainer.swerveDrive.setDefaultCommand(new HoldAngle());
   }
@@ -35,7 +36,14 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopPeriodic() {
-    Limelight.setLedMode(LightMode.eOff);
+
+    if(RobotContainer.xboxController.getXButtonPressed()) {
+      if(Limelight.isLedOn()) {
+        Limelight.setLedMode(LightMode.eOff);
+      } else {
+        Limelight.setLedMode(LightMode.eOn); 
+      }
+    }
     
     if (RobotContainer.xboxController.getStartButton()) {
       RobotContainer.swerveDrive.resetNavx();
