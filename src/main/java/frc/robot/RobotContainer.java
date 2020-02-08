@@ -18,6 +18,8 @@ import frc.robot.commands.DriveSwerveWithXbox;
 import frc.robot.commands.HoldAngle;
 import frc.robot.commands.RotateToAngleWhileDriving;
 import frc.robot.subsystems.SwerveDrive;
+import io.github.pseudoresonance.pixy2api.Pixy2;
+import io.github.pseudoresonance.pixy2api.links.SPILink;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -27,6 +29,8 @@ import frc.robot.subsystems.SwerveDrive;
  * commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
+  public static final Pixy2 pixy = Pixy2.createInstance(new SPILink());
+
   public static AHRS navx = new AHRS();
   public static SwerveDrive swerveDrive = new SwerveDrive();
   public static XboxController xboxController = new XboxController(RobotMap.XBOX_PORT);

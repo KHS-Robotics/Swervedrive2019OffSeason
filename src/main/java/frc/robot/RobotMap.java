@@ -44,6 +44,9 @@ public class RobotMap {
 	public static final int REAR_LEFT_DRIVE_ENC_A = 6;
 	public static final int REAR_LEFT_DRIVE_ENC_B = 7;
 
+  public static final int CP_SOLONOID = 0;
+  public static final int MANIPULATOR = 0;
+
   public static final SPI.Port NAVX_PORT = SPI.Port.kMXP;
   public static final byte NAVX_UPDATE_RATE_HZ = (byte) 50;
 }
