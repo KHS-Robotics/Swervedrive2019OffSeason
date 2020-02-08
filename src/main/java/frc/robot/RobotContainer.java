@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.DriveSwerveWithXbox;
 import frc.robot.commands.HoldAngle;
 import frc.robot.commands.RotateToAngleWhileDriving;
+import frc.robot.commands.RotateToTargetWhileDriving;
 import frc.robot.subsystems.SwerveDrive;
 import io.github.pseudoresonance.pixy2api.Pixy2;
 import io.github.pseudoresonance.pixy2api.links.SPILink;
@@ -36,7 +37,7 @@ public class RobotContainer {
   public static XboxController xboxController = new XboxController(RobotMap.XBOX_PORT);
 
   public static DriveSwerveWithXbox driveSwerveWithXbox = new DriveSwerveWithXbox();
-  private RotateToAngleWhileDriving rotateToAngleWhileDriving = new RotateToAngleWhileDriving(90);
+  private RotateToTargetWhileDriving rotateToTarget = new RotateToTargetWhileDriving();
   public static HoldAngle holdAngle = new HoldAngle();
 
   JoystickButton rotateToAngle;
@@ -59,7 +60,7 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     rotateToAngle = new JoystickButton(xboxController, XboxController.Button.kY.value);
-    rotateToAngle.whenHeld(rotateToAngleWhileDriving);
+    rotateToAngle.whenHeld(rotateToTarget);
 
     turnAndDrive = new CustomButton( () -> Math.abs(xboxController.getX(Hand.kRight)) > 0.05 );
     turnAndDrive.whenHeld(driveSwerveWithXbox);

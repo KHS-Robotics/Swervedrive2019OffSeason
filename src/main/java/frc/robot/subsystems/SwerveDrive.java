@@ -148,6 +148,10 @@ public class SwerveDrive extends SubsystemBase {
         m_backRight.getState());
   }
 
+  public void setPID(double p, double i, double d) {
+    this.targetPid.setPID(p, i, d);
+  }
+
   public void rotateToAngleInPlace(double setAngle) {
     holdAngleWhileDriving(0, 0, setAngle, false);
   }
