@@ -21,6 +21,7 @@ public class Robot extends TimedRobot {
     Limelight.setLedMode(LightMode.eOff);
     container = new RobotContainer();
     RobotContainer.swerveDrive.setDefaultCommand(new HoldAngle());
+
   }
 
   @Override
@@ -48,6 +49,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void disabledPeriodic() {
+    RobotContainer.pixy.setLamp((byte) 1, (byte) 1);
     Limelight.setLedMode(LightMode.eOff);
   }
 

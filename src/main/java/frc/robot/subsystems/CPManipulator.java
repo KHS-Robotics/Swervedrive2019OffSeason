@@ -32,42 +32,43 @@ public class CPManipulator extends SubsystemBase {
    * Spin specified number of times
    */
 
-  //private CANSparkMax motor;
-  //private CANEncoder motorEnc;
-  //private CANPIDController motorPid;
+  // private CANSparkMax motor;
+  // private CANEncoder motorEnc;
+  // private CANPIDController motorPid;
   private double speed;
-  private Solenoid solenoid;
+  //private Solenoid solenoid;
   private int currentColorSignature;
   private int initialColor;
   private double curPos;
   private double curRPM;
 
   public CPManipulator() {
-    solenoid = new Solenoid(RobotMap.CP_SOLONOID);
-    //motor = new CANSparkMax(RobotMap.MANIPULATOR, MotorType.kBrushless);
-    //motorEnc = motor.getEncoder();
-    //motorPid = motor.getPIDController();
+    //solenoid = new Solenoid(RobotMap.CP_SOLONOID);
+    // motor = new CANSparkMax(RobotMap.MANIPULATOR, MotorType.kBrushless);
+    // motorEnc = motor.getEncoder();
+    // motorPid = motor.getPIDController();
 
     setPosition(false);
 
-    var tab = Shuffleboard.getTab("Manipulator Speed");
-    tab.addNumber("Speed", this::getSpeed);
-    tab.addBoolean("Piston Up", solenoid::get);
+    var tab = Shuffleboard.getTab("CP Manipulator");
+    //tab.addNumber("Speed", this::getSpeed);
+    //tab.addBoolean("Piston Up", solenoid::get);
 
     tab.addNumber("Current Color", () -> currentColorSignature);
+    tab.addNumber("Dist", this::distToCenter);
     tab.addNumber("Initial Color", () -> initialColor);
 
-    //motorPid.setP(0.0);
-    //motorPid.setI(0.0);
-    //motorPid.setD(0.0);
-    //motorPid.setIZone(0.0);
+    // motorPid.setP(0.0);
+    // motorPid.setI(0.0);
+    // motorPid.setD(0.0);
+    // motorPid.setIZone(0.0);
   }
 
   @Override
   public void periodic() {
     currentColorSignature = getCurColor();
-    //curPos = motorEnc.getPosition();
-    //curRPM = motorEnc.getVelocity();
+    // curPos = motorEnc.getPosition();
+    // curRPM = motorEnc.getVelocity();
   }
 
   public int distToColor(char curColor, char toColor) {
@@ -84,6 +85,16 @@ public class CPManipulator extends SubsystemBase {
     }
 
     return dist;
+  }
+
+  public double distToCenter() {
+    ColorBlock block = getCurBlock();
+
+    if(block != null) {
+      return block.getDist();
+    } else {
+      return 0;
+    }
   }
 
   public double distToDegrees(int dist) {
@@ -115,7 +126,7 @@ public class CPManipulator extends SubsystemBase {
   }
 
   public void spin(double speed) {
-    //motorPid.setReference(speed, ControlType.kSmartMotion);
+    // motorPid.setReference(speed, ControlType.kSmartMotion);
     this.speed = speed;
   }
 
@@ -142,22 +153,28 @@ public class CPManipulator extends SubsystemBase {
 
   public int getCurColor() {
     int curColorSig = -1;
-    ArrayList<ColorBlock> newBlocks = new ArrayList<ColorBlock>(0);
+    ArrayList<ColorBlock> blocks = PixyCam.getBlocks();
 
-    ArrayList<Block> blocks = PixyCam.getBlocks();
+    if (blocks.size() > 0) {
+      blocks = PixyCam.sortByCenter(blocks);
 
-    for (int i = 0; i < blocks.size(); i++) {
-      ColorBlock newBlock = new ColorBlock(blocks.get(i));
-      newBlocks.set(i, newBlock);
-    }
-
-    newBlocks = PixyCam.sortByWeight(newBlocks);
-
-    if (newBlocks.size() > 0) {
-      curColorSig = newBlocks.get(0).getSig();
+      curColorSig = blocks.get(0).getSig();
     }
 
     return curColorSig;
+  }
+
+  public ColorBlock getCurBlock() {
+    ColorBlock block = null;
+    ArrayList<ColorBlock> blocks = PixyCam.getBlocks();
+
+    if (blocks.size() > 0) {
+      blocks = PixyCam.sortByCenter(blocks);
+
+      block = blocks.get(0);
+    }
+
+    return block;
   }
 
   public double getSpeed() {
@@ -165,6 +182,6 @@ public class CPManipulator extends SubsystemBase {
   }
 
   public void setPosition(boolean up) {
-    solenoid.set(up);
+    //solenoid.set(up);
   }
 }

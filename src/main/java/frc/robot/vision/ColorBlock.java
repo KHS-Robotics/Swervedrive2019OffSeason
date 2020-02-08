@@ -12,8 +12,8 @@ public class ColorBlock {
 	public final static double xHalf = (315 / 2);
 	public final static double yHalf = (207 / 2);
 	// (0, 0) --> (315, 0)
-    // (0, 0) --> (0, 207)
-	
+	// (0, 0) --> (0, 207)
+
 	public ColorBlock(double x, double y, double width, double height, int sig) {
 		this.x = x;
 		this.y = y;
@@ -76,5 +76,13 @@ public class ColorBlock {
 
 	public int getSig() {
 		return sig;
+	}
+
+	public double getX() {
+		return x;
+	}
+
+	public double getY() {
+		return y;
 	}
 }

@@ -7,6 +7,8 @@
 
 package frc.robot;
 
+import frc.robot.subsystems.CPManipulator;
+
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.GenericHID;
@@ -31,6 +33,7 @@ import io.github.pseudoresonance.pixy2api.links.SPILink;
  */
 public class RobotContainer {
   public static final Pixy2 pixy = Pixy2.createInstance(new SPILink());
+  
 
   public static AHRS navx = new AHRS();
   public static SwerveDrive swerveDrive = new SwerveDrive();
@@ -39,6 +42,8 @@ public class RobotContainer {
   public static DriveSwerveWithXbox driveSwerveWithXbox = new DriveSwerveWithXbox();
   private RotateToTargetWhileDriving rotateToTarget = new RotateToTargetWhileDriving();
   public static HoldAngle holdAngle = new HoldAngle();
+
+  public static final CPManipulator cpanel = new CPManipulator();
 
   JoystickButton rotateToAngle;
   CustomButton turnAndDrive;
@@ -49,6 +54,7 @@ public class RobotContainer {
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
+    pixy.init();
     configureButtonBindings();
   }
 

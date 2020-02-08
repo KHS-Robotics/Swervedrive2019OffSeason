@@ -55,6 +55,5 @@ public enum ColorWheel {
             default:
                 throw new IllegalArgumentException();
         }
-    }
-    
+    }    
 }
