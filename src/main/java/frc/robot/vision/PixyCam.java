@@ -7,6 +7,11 @@ import io.github.pseudoresonance.pixy2api.Pixy2;
 import io.github.pseudoresonance.pixy2api.Pixy2CCC.Block;
 
 public class PixyCam {
+	private static ArrayList<Block> blocks = new ArrayList<>();
+	private static ArrayList<ColorBlock> returnBlocks = new ArrayList<>();
+	private static ArrayList<Integer> sigs = new ArrayList<>();
+	private static ArrayList<Integer> currentIdxs = new ArrayList<>();
+
 	public static ArrayList<ColorBlock> sortByCenter(ArrayList<ColorBlock> args) {
 		args.sort(
 				(a, b) -> Double.compare(Math.abs(ColorBlock.xHalf - a.getX()) + Math.abs(ColorBlock.yHalf - a.getY()),
@@ -27,28 +32,37 @@ public class PixyCam {
 			totalHeight += blocks.get(sigs.get(i)).getHeight();
 		}
 
-		smallX = blocks.get(0).getX() - (blocks.get(0).getWidth() / 2.0);
-		largeX = blocks.get(0).getX() + (blocks.get(0).getWidth() / 2.0);
+		int curBlockX = blocks.get(0).getX();
+		int curBlockY = blocks.get(0).getY();
 
-		smallY = blocks.get(0).getY() - (blocks.get(0).getHeight() / 2.0);
-		largeY = blocks.get(0).getY() + (blocks.get(0).getHeight() / 2.0);
+		smallX = curBlockX - (blocks.get(0).getWidth() / 2.0);
+		largeX = curBlockX + (blocks.get(0).getWidth() / 2.0);
+
+		smallY = curBlockY - (blocks.get(0).getHeight() / 2.0);
+		largeY = curBlockY + (blocks.get(0).getHeight() / 2.0);
 
 		for (int i = 0; i < sigs.size(); i++) {
 			xAverage += (blocks.get(sigs.get(i)).getWidth() / totalWidth) * blocks.get(i).getX();
 			yAverage += (blocks.get(sigs.get(i)).getHeight() / totalHeight) * blocks.get(i).getY();
 
-			if (blocks.get(i).getX() - (blocks.get(i).getWidth() / 2.0) < smallX) {
-				smallX = blocks.get(i).getX() - (blocks.get(i).getWidth() / 2.0);
+			double newXMinus = blocks.get(i).getX() - (blocks.get(i).getWidth() / 2.0);
+			double newXPlus = blocks.get(i).getX() + (blocks.get(i).getWidth() / 2.0);
+
+			double newYMinus = blocks.get(i).getY() - (blocks.get(i).getHeight() / 2.0);
+			double newYPlus = blocks.get(i).getY() + (blocks.get(i).getHeight() / 2.0);
+
+			if (newXMinus < smallX) {
+				smallX = newXMinus;
 			}
-			if (blocks.get(i).getX() + (blocks.get(i).getWidth() / 2.0) > largeX) {
-				largeX = blocks.get(i).getX() - (blocks.get(i).getWidth() / 2.0);
+			if (newXPlus > largeX) {
+				largeX = newXPlus;
 			}
 
-			if (blocks.get(i).getY() - (blocks.get(i).getHeight() / 2.0) < smallY) {
-				smallY = blocks.get(i).getY() - (blocks.get(i).getHeight() / 2.0);
+			if (newYMinus < smallY) {
+				smallY = newYMinus;
 			}
-			if (blocks.get(i).getY() + (blocks.get(i).getHeight() / 2.0) > largeY) {
-				largeY = blocks.get(i).getY() - (blocks.get(i).getHeight() / 2.0);
+			if (newYPlus > largeY) {
+				largeY = newYPlus;
 			}
 		}
 
@@ -60,16 +74,19 @@ public class PixyCam {
 	public static ArrayList<ColorBlock> getBlocks() {
 		Pixy2 pixy = RobotContainer.pixy;
 		pixy.getCCC().getBlocks(true, 255, 8);
-		ArrayList<Block> blocks = pixy.getCCC().getBlocks();
-		ArrayList<ColorBlock> returnBlocks = new ArrayList<>();
-		ArrayList<Integer> sigs = new ArrayList<>();
+
+		blocks = pixy.getCCC().getBlocks();
+
+		returnBlocks.clear();
+
+		sigs.clear();
 
 		for (int i = 0; i < blocks.size(); i++) {
 			sigs.add(blocks.get(i).getSignature());
 		}
 
 		for (int sig = 1; sig <= 4; sig++) {
-			ArrayList<Integer> currentIdxs = new ArrayList<>();
+			currentIdxs.clear();
 			for (int i = 0; i < sigs.size(); i++) {
 				if (sigs.get(i) == sig) {
 					currentIdxs.add(i);

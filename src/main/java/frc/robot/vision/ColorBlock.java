@@ -9,8 +9,8 @@ public class ColorBlock {
 	private final static double sizeWeight = 0.01;
 	private final static double distWeight = 0.01;
 
-	public final static double xHalf = (315 / 2);
-	public final static double yHalf = (207 / 2);
+	public final static double xHalf = (315.0 / 2.0);
+	public final static double yHalf = (207.0 / 2.0);
 	// (0, 0) --> (315, 0)
 	// (0, 0) --> (0, 207)
 
@@ -20,6 +20,7 @@ public class ColorBlock {
 		this.width = width;
 		this.height = height;
 		this.sig = sig;
+		update();
 	}
 
 	public ColorBlock(Block block) {
@@ -28,6 +29,7 @@ public class ColorBlock {
 		width = block.getWidth();
 		height = block.getHeight();
 		sig = block.getSignature();
+		update();
 	}
 
 	public void update() {
@@ -64,6 +66,10 @@ public class ColorBlock {
 
 	public double getWeight() {
 		return weight;
+	}
+
+	public double getXDist() {
+		return x - xHalf;
 	}
 
 	public double getLength() {

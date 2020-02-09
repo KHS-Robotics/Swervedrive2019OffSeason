@@ -38,6 +38,7 @@ public class CPManipulator extends SubsystemBase {
   private double speed;
   //private Solenoid solenoid;
   private int currentColorSignature;
+  private ColorBlock currentBlock;
   private int initialColor;
   private double curPos;
   private double curRPM;
@@ -56,6 +57,9 @@ public class CPManipulator extends SubsystemBase {
 
     tab.addNumber("Current Color", () -> currentColorSignature);
     tab.addNumber("Dist", this::distToCenter);
+    tab.addNumber("X Dist", this::xDist);
+    tab.addNumber("X coord", this::centerX);
+    tab.addNumber("Y coord", this::centerY);
     tab.addNumber("Initial Color", () -> initialColor);
 
     // motorPid.setP(0.0);
@@ -66,6 +70,7 @@ public class CPManipulator extends SubsystemBase {
 
   @Override
   public void periodic() {
+    currentBlock = getCurBlock();
     currentColorSignature = getCurColor();
     // curPos = motorEnc.getPosition();
     // curRPM = motorEnc.getVelocity();
@@ -88,10 +93,32 @@ public class CPManipulator extends SubsystemBase {
   }
 
   public double distToCenter() {
-    ColorBlock block = getCurBlock();
+    if(currentBlock != null) {
+      return currentBlock.getDist();
+    } else {
+      return 0;
+    }
+  }
 
-    if(block != null) {
-      return block.getDist();
+  public double xDist() {
+    if(currentBlock!= null) {
+      return currentBlock.getXDist();
+    } else {
+      return 0;
+    }
+  }
+
+  public double centerX() {
+    if(currentBlock != null) {
+      return currentBlock.getX();
+    } else {
+      return 0;
+    }
+  }
+
+  public double centerY() {
+    if(currentBlock != null) {
+      return currentBlock.getY();
     } else {
       return 0;
     }
@@ -153,12 +180,9 @@ public class CPManipulator extends SubsystemBase {
 
   public int getCurColor() {
     int curColorSig = -1;
-    ArrayList<ColorBlock> blocks = PixyCam.getBlocks();
 
-    if (blocks.size() > 0) {
-      blocks = PixyCam.sortByCenter(blocks);
-
-      curColorSig = blocks.get(0).getSig();
+    if(currentBlock != null) {
+      curColorSig = currentBlock.getSig();
     }
 
     return curColorSig;
