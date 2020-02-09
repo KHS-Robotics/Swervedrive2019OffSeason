@@ -42,6 +42,7 @@ public class CPManipulator extends SubsystemBase {
   private int initialColor;
   private double curPos;
   private double curRPM;
+  private final double WHEEL_RADIUS = 2.0, CP_RADIUS = 16.0;
 
   public CPManipulator() {
     //solenoid = new Solenoid(RobotMap.CP_SOLONOID);
@@ -57,6 +58,7 @@ public class CPManipulator extends SubsystemBase {
 
     tab.addNumber("Current Color", () -> currentColorSignature);
     tab.addNumber("Dist", this::distToCenter);
+    tab.addNumber("Dist to Green", () -> distToColor('G'));
     tab.addNumber("X Dist", this::xDist);
     tab.addNumber("X coord", this::centerX);
     tab.addNumber("Y coord", this::centerY);
@@ -76,21 +78,32 @@ public class CPManipulator extends SubsystemBase {
     // curRPM = motorEnc.getVelocity();
   }
 
-  public int distToColor(char curColor, char toColor) {
-    int dist, curIndex, toIndex;
+  public double distToColor(char toColor) {
+    int curIndex, toIndex;
+    double dist;
 
-    curIndex = ColorWheel.toColor(curColor).signature;
+    curIndex = currentColorSignature;
     toIndex = ColorWheel.toColor(toColor).signature;
 
-    dist = toIndex + curIndex;
+    dist = toIndex - curIndex;
     dist %= 4;
 
-    if (dist == 3) {
-      dist -= 4;
+    dist *= 360 / 8.0;
+
+    if (dist == 3 * 360 / 8.0) {
+      dist -= 4 * 360 / 8.0;
+      dist += xDist() * (60.0 / 315.0);
+    } else {
+      dist -= xDist() * (60.0 / 315.0);
     }
 
     return dist;
   }
+
+  public double degreesToArclength(double degrees) {
+    double arcLength = degrees * radius;
+    return arcLength;
+  } 
 
   public double distToCenter() {
     if(currentBlock != null) {
@@ -124,12 +137,6 @@ public class CPManipulator extends SubsystemBase {
     }
   }
 
-  public double distToDegrees(int dist) {
-    double spins = dist / 8.0;
-
-    return spins * 360;
-  }
-
   public int getInitialColor() {
     return initialColor;
   }
@@ -140,16 +147,6 @@ public class CPManipulator extends SubsystemBase {
 
   public int getSensorColor(int curSig) {
     return curSig + 2;
-  }
-
-  public double degreesToColor(char curColor, char toColor) {
-    return distToDegrees(distToColor(curColor, toColor));
-  }
-
-  public double spinsToRadians(double spins) {
-    double degrees = spins * 360;
-    double radians = (degrees * Math.PI) / 180;
-    return radians;
   }
 
   public void spin(double speed) {

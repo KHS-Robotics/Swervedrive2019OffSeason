@@ -19,11 +19,6 @@ public class PixyCam {
 		return args;
 	}
 
-	public static ArrayList<ColorBlock> sortByWeight(ArrayList<ColorBlock> args) {
-		args.sort((a, b) -> Double.compare(a.getWeight(), b.getWeight()));
-		return args;
-	}
-
 	public static ColorBlock averageDupBlocks(ArrayList<Integer> sigs, ArrayList<Block> blocks) {
 		double totalWidth = 0, totalHeight = 0, xAverage = 0, yAverage = 0, smallX, largeX, smallY, largeY;
 
@@ -42,14 +37,20 @@ public class PixyCam {
 		largeY = curBlockY + (blocks.get(0).getHeight() / 2.0);
 
 		for (int i = 0; i < sigs.size(); i++) {
-			xAverage += (blocks.get(sigs.get(i)).getWidth() / totalWidth) * blocks.get(i).getX();
-			yAverage += (blocks.get(sigs.get(i)).getHeight() / totalHeight) * blocks.get(i).getY();
+			double blockX = blocks.get(i).getX();
+			double blockY = blocks.get(i).getY();
 
-			double newXMinus = blocks.get(i).getX() - (blocks.get(i).getWidth() / 2.0);
-			double newXPlus = blocks.get(i).getX() + (blocks.get(i).getWidth() / 2.0);
+			double blockWidth = blocks.get(i).getWidth();
+			double blockHeight = blocks.get(i).getHeight();
 
-			double newYMinus = blocks.get(i).getY() - (blocks.get(i).getHeight() / 2.0);
-			double newYPlus = blocks.get(i).getY() + (blocks.get(i).getHeight() / 2.0);
+			xAverage += (blocks.get(sigs.get(i)).getWidth() / totalWidth) * blockX;
+			yAverage += (blocks.get(sigs.get(i)).getHeight() / totalHeight) * blockY;
+
+			double newXMinus = blockX - (blockWidth / 2.0);
+			double newXPlus = blockX + (blockWidth / 2.0);
+
+			double newYMinus = blockY - (blockHeight / 2.0);
+			double newYPlus = blockY + (blockHeight / 2.0);
 
 			if (newXMinus < smallX) {
 				smallX = newXMinus;
