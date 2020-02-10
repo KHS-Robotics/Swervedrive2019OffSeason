@@ -101,7 +101,7 @@ public class CPManipulator extends SubsystemBase {
   }
 
   public double degreesToArclength(double degrees) {
-    double arcLength = degrees * radius;
+    double arcLength = degrees * CP_RADIUS;
     return arcLength;
   } 
 
