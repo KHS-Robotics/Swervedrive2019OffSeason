@@ -7,11 +7,10 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Limelight;
-import frc.robot.RobotContainer;
 import frc.robot.Limelight.LightMode;
+import frc.robot.RobotContainer;
 import frc.robot.subsystems.SwerveDrive;
 
 public class RotateToTargetWhileDriving extends CommandBase {
@@ -37,11 +36,11 @@ public class RotateToTargetWhileDriving extends CommandBase {
   public void execute() {
     angle = -RobotContainer.navx.getYaw() - Limelight.getTx();
 
-    var xSpeed = -RobotContainer.xboxController.getY(Hand.kLeft) * SwerveDrive.kMaxSpeed;
+    var xSpeed = -RobotContainer.xboxController.getLeftY() * SwerveDrive.kMaxSpeed;
 
-    var ySpeed = -RobotContainer.xboxController.getX(Hand.kLeft) * SwerveDrive.kMaxSpeed;
+    var ySpeed = -RobotContainer.xboxController.getLeftX() * SwerveDrive.kMaxSpeed;
     
-    isFieldOriented = (!RobotContainer.xboxController.getBumper(Hand.kLeft));
+    isFieldOriented = (!RobotContainer.xboxController.getLeftBumper());
 
     RobotContainer.swerveDrive.holdAngleWhileDriving(xSpeed, ySpeed, angle, isFieldOriented);
   }

@@ -7,7 +7,6 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.SwerveDrive;
@@ -32,11 +31,11 @@ public class RotateToAngleWhileDriving extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    var xSpeed = -RobotContainer.xboxController.getY(Hand.kLeft) * SwerveDrive.kMaxSpeed;
+    var xSpeed = -RobotContainer.xboxController.getLeftY() * SwerveDrive.kMaxSpeed;
 
-    var ySpeed = -RobotContainer.xboxController.getX(Hand.kLeft) * SwerveDrive.kMaxSpeed;
+    var ySpeed = -RobotContainer.xboxController.getLeftX() * SwerveDrive.kMaxSpeed;
     
-    isFieldOriented = (!RobotContainer.xboxController.getBumper(Hand.kLeft));
+    isFieldOriented = (!RobotContainer.xboxController.getLeftBumper());
 
     RobotContainer.swerveDrive.holdAngleWhileDriving(xSpeed, ySpeed, angle, isFieldOriented);
   }

@@ -2,7 +2,7 @@ package frc.robot;
 
 public enum ColorWheel {
     YELLOW(1), RED(2), GREEN(3), BLUE(4);
-    
+
     public final int signature;
     private ColorWheel(int signature) {
         this.signature = signature;

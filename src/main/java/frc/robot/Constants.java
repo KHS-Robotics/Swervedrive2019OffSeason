@@ -1,39 +1,36 @@
-/*----------------------------------------------------------------------------*/
-/* Copyright (c) 2017-2018 FIRST. All Rights Reserved.                        */
-/* Open Source Software - may be modified and shared by FRC teams. The code   */
-/* must be accompanied by the FIRST BSD license file in the root directory of */
-/* the project.                                                               */
-/*----------------------------------------------------------------------------*/
+// Copyright (c) FIRST and other WPILib contributors.
+
+// Open Source Software; you can modify and/or share it under the terms of
+// the WPILib BSD license file in the root directory of this project.
 
 package frc.robot;
 
 /**
- * The RobotMap is a mapping from the ports sensors and actuators are wired into
- * to a variable name. This provides flexibility changing wiring, makes checking
- * the wiring easier and significantly reduces the number of magic numbers
- * floating around.
+ * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
+ * constants. This class should not be used for any other purpose. All constants should be declared
+ * globally (i.e. public static). Do not put anything functional in this class.
+ *
+ * <p>It is advised to statically import this class (or one of its inner classes) wherever the
+ * constants are needed, to reduce verbosity.
  */
-public class Constants {
-  // If you are using multiple modules, make sure to define both the port
-  // number and the module.
-  public static final double FRONT_LEFT_P = 2.0;
-  public static final double FRONT_LEFT_I = 0.005;
-  public static final double FRONT_LEFT_D = 0.09;
-  
-  public static final double FRONT_RIGHT_P = 2.0;
-  public static final double FRONT_RIGHT_I = 0.005;
-  public static final double FRONT_RIGHT_D = 0.09;
+public final class Constants {
+    public static final double FRONT_LEFT_P = 2.0;
+    public static final double FRONT_LEFT_I = 0.005;
+    public static final double FRONT_LEFT_D = 0.09;
 
-  public static final double REAR_LEFT_P = 2.0;
-  public static final double REAR_LEFT_I = 0.005;
-  public static final double REAR_LEFT_D = 0.09;
+    public static final double FRONT_RIGHT_P = 2.0;
+    public static final double FRONT_RIGHT_I = 0.005;
+    public static final double FRONT_RIGHT_D = 0.09;
 
-  public static final double REAR_RIGHT_P = 2.0;
-  public static final double REAR_RIGHT_I = 0.005;
-  public static final double REAR_RIGHT_D = 0.09;
+    public static final double REAR_LEFT_P = 2.0;
+    public static final double REAR_LEFT_I = 0.005;
+    public static final double REAR_LEFT_D = 0.09;
 
-  public static final double TARGET_P = 0.175;
-  public static final double TARGET_I = 0.0001;
-  public static final double TARGET_D = 0.01;
-  
+    public static final double REAR_RIGHT_P = 2.0;
+    public static final double REAR_RIGHT_I = 0.005;
+    public static final double REAR_RIGHT_D = 0.09;
+
+    public static final double TARGET_P = 0.175;
+    public static final double TARGET_I = 0.0001;
+    public static final double TARGET_D = 0.01;
 }

@@ -1,17 +1,7 @@
-/*----------------------------------------------------------------------------*/
-/* Copyright (c) 2018 FIRST. All Rights Reserved.                             */
-/* Open Source Software - may be modified and shared by FRC teams. The code   */
-/* must be accompanied by the FIRST BSD license file in the root directory of */
-/* the project.                                                               */
-/*----------------------------------------------------------------------------*/
-
 package frc.robot.logging;
 
 import edu.wpi.first.wpilibj.DriverStation;
 
-/**
- * Logger to make it easier to log the Driver Station and stdout/stderr
- */
 public class Logger {
     private Logger() {
     }
@@ -20,7 +10,7 @@ public class Logger {
 
     /**
      * Sets the minimum severity to log
-     * 
+     *
      * @param sev the minimum severity to log
      */
     public static void setSeverity(Severity sev) {
@@ -29,7 +19,7 @@ public class Logger {
 
     /**
      * Logs a message to the Driver Station
-     * 
+     *
      * @param sev     the severity of the message
      * @param message the message to send
      * @param t       the exception to log to stderr
@@ -56,7 +46,7 @@ public class Logger {
 
     /**
      * Debug message to send to the Driver Station
-     * 
+     *
      * @param message the message to report to the Driver Station
      */
     public static void debug(String message) {
@@ -65,7 +55,7 @@ public class Logger {
 
     /**
      * Info message to send to the Driver Station
-     * 
+     *
      * @param message the message to report to the Driver Station
      */
     public static void info(String message) {
@@ -74,7 +64,7 @@ public class Logger {
 
     /**
      * Warning message to send to the Driver Station
-     * 
+     *
      * @param message the message to report to the Driver Station
      */
     public static void warning(String message) {
@@ -83,7 +73,7 @@ public class Logger {
 
     /**
      * Error message to send to the Driver Station
-     * 
+     *
      * @param message the message to report to the Driver Station
      * @param t       the exception to print to stderr
      */
@@ -98,7 +88,7 @@ public class Logger {
 
         /**
          * Creates a new severity with the specified level following syslog standard
-         * 
+         *
          * @param severity the severity from 0 to 7 (syslog standard)
          */
         private Severity(int severity) {
@@ -107,7 +97,7 @@ public class Logger {
 
         /**
          * Gets the int value of the severity
-         * 
+         *
          * @return the int value of the severity following syslog standards
          */
         public int level() {
